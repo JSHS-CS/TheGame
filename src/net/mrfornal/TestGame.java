@@ -20,6 +20,7 @@ class TestGame extends BasicGame
 {
     private Image sprite;
     private Vector2f spritePos;
+    private float spriteScale;
 
     public TestGame()
     {
@@ -31,6 +32,7 @@ class TestGame extends BasicGame
     {
         sprite = new Image("resource/image/space_ship.png");
         spritePos = new Vector2f(container.getWidth() / 2.0f, container.getHeight() / 2.0f);
+        spriteScale = 1.0f;
     }
 
     @Override
@@ -42,12 +44,17 @@ class TestGame extends BasicGame
         {
             container.exit();
         }
+        
+        if (input.isKeyPressed(Input.KEY_SPACE))
+        {
+            spriteScale += 0.1f * delta;
+        }
     }
 
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        sprite.draw(spritePos.x, spritePos.y, 1.0f);
+        sprite.draw(spritePos.x, spritePos.y, spriteScale);
     }
     
 }
