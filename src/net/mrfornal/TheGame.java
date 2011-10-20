@@ -1,5 +1,5 @@
 package net.mrfornal;
-// comment
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
