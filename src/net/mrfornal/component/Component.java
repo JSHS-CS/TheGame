@@ -15,7 +15,6 @@ public class Component
 
     private Entity owner;
     private String id;
-    
     private static int instance_count = 0;
 
     /**
@@ -40,7 +39,6 @@ public class Component
         this.id = id;
     }
 
-
     /**
      * Get the value of owner
      *
@@ -50,5 +48,4 @@ public class Component
     {
         return owner;
     }
-
 }
