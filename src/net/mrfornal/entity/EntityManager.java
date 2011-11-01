@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class EntityManager
 {
-    //A collection of some sort
+    //A collection of some sort - uses ArrayList here
 
     private ArrayList<Entity> entities = new ArrayList<Entity>();
     //singleton instance

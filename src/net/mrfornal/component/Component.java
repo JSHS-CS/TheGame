@@ -14,7 +14,7 @@ public class Component
 {
 
     private Entity owner;
-    private String name;
+    private String name; //otherwise called ID
     private static int instance_count = 0;
 
     /**
