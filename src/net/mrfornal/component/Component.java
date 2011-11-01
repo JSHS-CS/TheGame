@@ -14,7 +14,7 @@ public class Component
 {
 
     private Entity owner;
-    private String id;
+    private String name;
     private static int instance_count = 0;
 
     /**
@@ -24,19 +24,19 @@ public class Component
      */
     public String getId()
     {
-        return id;
+        return name;
     }
 
     public Component(Entity owner)
     {
         this.owner = owner;
-        this.id = getClass().getSimpleName() + instance_count++;
+        this.name = getClass().getSimpleName() + instance_count++;
     }
 
     public Component(Entity owner, String id)
     {
         this.owner = owner;
-        this.id = id;
+        this.name = id;
     }
 
     /**
