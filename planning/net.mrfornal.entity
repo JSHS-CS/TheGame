@@ -6,14 +6,14 @@
     <void property="attributes"> 
      <void property="text"> 
       <string>-owner:Entity
--id:String</string> 
+-name:String</string> 
      </void> 
     </void> 
     <void property="methods"> 
      <void property="text"> 
       <string>+getOwner:Entity
 +setOwner(obj:Entity)
-+getID:String
++getName:String
 +update(gc:GameContainer, sb:StateBasedGame, delta:int)</string> 
      </void> 
     </void> 
@@ -45,8 +45,8 @@
    </object> 
    <object class="java.awt.geom.Point2D$Double"> 
     <void method="setLocation"> 
-     <double>165.27505959331648</double> 
-     <double>293.1837448814354</double> 
+     <double>372.2750595933165</double> 
+     <double>300.1837448814354</double> 
     </void> 
    </object> 
   </void> 
