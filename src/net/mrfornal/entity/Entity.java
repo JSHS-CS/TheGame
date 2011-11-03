@@ -6,6 +6,7 @@
 package net.mrfornal.entity;
 
 import java.util.List;
+import java.util.ArrayList;
 import net.mrfornal.component.Component;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,29 +19,31 @@ import org.newdawn.slick.geom.Vector2f;
  */
 public abstract class Entity
 {
+
     private static int instance_count = 0;
-    
     private Vector2f position;
     private String name;
     private float rotation;
     private float scale;
     private int layer;
     private List<Component> components;
-    
+
     /**
      * Default constructor assigns a consecutively numbered id value
      * as the Entity's name
      */
     public Entity()
     {
-        name = getClass().getSimpleName() + instance_count++;
+        this(null);
     }
 
-    /**
-     * Get the value of name
-     *
-     * @return the value of name
-     */
+    public Entity(String name)
+    {
+        this.name = (name == null)
+                ? (getClass().getSimpleName() + instance_count++) : name;
+        components = new ArrayList<Component>();
+    }
+
     public String getName()
     {
         return name;
@@ -86,11 +89,6 @@ public abstract class Entity
         return layer;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param name new value of name
-     */
     public void setName(String name)
     {
         this.name = name;
@@ -135,20 +133,20 @@ public abstract class Entity
     {
         this.layer = layer;
     }
-    
+
     /**
      * This method corresponds to the update() method in the Game interface
      * @see org.newdawn.slick.Game
      * @param container
      * @param delta
-     * @throws SlickException 
+     * @throws SlickException
      */
     public final void update(GameContainer container, int delta) throws SlickException
     {
         //Iterate through collection of Components,
         //calling update on each
     }
-    
+
     /**
      * This method corresponds to the init() method in the Game interface
      * @see org.newdawn.slick.Game
@@ -160,7 +158,7 @@ public abstract class Entity
         //Iterate through collection of Components,
         //calling init on each
     }
-    
+
     /**
      * This method corresponds to the render() method in the Game interface
      * @see org.newdawn.slick.Game
@@ -172,7 +170,32 @@ public abstract class Entity
     {
         //Iterate through collection of Components,
         //calling render on each RenderableComponent
-        
-        
     }
+    
+    /**
+     * Add a component to this entity
+     * @param comp 
+     */
+     public void addComponent(Component comp)
+    {
+        components.add(comp);
+    }
+     
+    /**
+      * Removes a component from this entity
+      * @param name The name of the component to remove
+      * @return The removed component, or null if no matching name was found
+      */
+    public Component removeComponent(String name)
+    {
+        for (int i = 0; i < components.size(); i++)
+        {
+            if (components.get(i).getName().equals(name))
+            {
+                return components.remove(i);
+            }
+        }
+        return null;
+    }
+
 }
