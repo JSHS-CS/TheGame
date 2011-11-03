@@ -98,7 +98,7 @@ public abstract class Entity
     public final void render(GameContainer container, Graphics g) throws SlickException
     {
         //Iterate through collection of Components,
-        //calling render on each
+        //calling render on each RenderableComponent
         
         
     }
