@@ -5,12 +5,13 @@
 package net.mrfornal.component;
 
 import net.mrfornal.entity.Entity;
+import org.newdawn.slick.GameContainer;
 
 /**
  *
  * @author sfornal
  */
-public class Component
+public abstract class Component
 {
 
     private Entity owner;
@@ -48,4 +49,6 @@ public class Component
     {
         return owner;
     }
+    
+    public abstract void update(GameContainer container, int delta);
 }

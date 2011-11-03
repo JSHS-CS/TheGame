@@ -5,6 +5,9 @@
  */
 package net.mrfornal.entity;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
@@ -14,11 +17,11 @@ import org.newdawn.slick.geom.Vector2f;
 public abstract class Entity
 {
 
-    Vector2f position;
+    private Vector2f position;
     private String name;
-    float rotation;
-    float scale;
-    int layer;
+    private float rotation;
+    private float scale;
+    private int layer;
 
     /**
      * Get the value of name
@@ -78,5 +81,25 @@ public abstract class Entity
     public void setLayer(int lay)
     {
         this.layer = lay;
+    }
+    
+    public final void update(GameContainer container, int delta) throws SlickException
+    {
+        //Iterate through collection of Components,
+        //calling update on each
+    }
+    
+    public final void init(GameContainer container) throws SlickException
+    {
+        //Iterate through collection of Components,
+        //calling init on each
+    }
+    
+    public final void render(GameContainer container, Graphics g) throws SlickException
+    {
+        //Iterate through collection of Components,
+        //calling render on each
+        
+        
     }
 }

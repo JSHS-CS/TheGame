@@ -14,12 +14,13 @@ public class EntityManager
 {
     //A collection of some sort - uses ArrayList here
 
-    private ArrayList<Entity> entities = new ArrayList<Entity>();
+    private ArrayList<Entity> entities;
     //singleton instance
-    private static EntityManager instance = new EntityManager();
+    private static EntityManager instance;
 
-    public EntityManager()
+    private EntityManager()
     {
+        entities = new ArrayList<Entity>();
     }
 
     public ArrayList<Entity> getAllEntities()
@@ -27,14 +28,14 @@ public class EntityManager
         return entities;
     }
 
-    public ArrayList<Entity> getEntitiesOfType(Entity e)
+    public ArrayList<Entity> getEntitiesOfType(Class c)
     {
         ArrayList<Entity> entityType = new ArrayList<Entity>();
         for (Entity i : entities)
         {
-            if (i.getClass().equals(e.getClass()))
+            if (i.getClass().equals(c))
             {
-                entityType.add(e);
+                entityType.add(i);
             }
         }
         return entityType;
