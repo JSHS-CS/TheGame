@@ -23,7 +23,7 @@ public abstract class Component
      *
      * @return the value of id
      */
-    public String getId()
+    public String getName()
     {
         return name;
     }
@@ -34,10 +34,10 @@ public abstract class Component
         this.name = getClass().getSimpleName() + instance_count++;
     }
 
-    public Component(Entity owner, String id)
+    public Component(Entity owner, String name)
     {
         this.owner = owner;
-        this.name = id;
+        this.name = name;
     }
 
     /**

@@ -5,6 +5,8 @@
  */
 package net.mrfornal.entity;
 
+import java.util.ArrayList;
+import net.mrfornal.component.Component;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -22,12 +24,9 @@ public abstract class Entity
     private float rotation;
     private float scale;
     private int layer;
+    //collection of components of the entity
+    private ArrayList<Component> components = new ArrayList<Component>();
 
-    /**
-     * Get the value of name
-     *
-     * @return the value of name
-     */
     public String getName()
     {
         return name;
@@ -53,11 +52,6 @@ public abstract class Entity
         return layer;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param name new value of name
-     */
     public void setName(String name)
     {
         this.name = name;
@@ -82,24 +76,40 @@ public abstract class Entity
     {
         this.layer = lay;
     }
-    
+
+    public void addComponent(Component comp)
+    {
+        components.add(comp);
+    }
+//removes and returns a component that is removed
+
+    public Component removeComponent(String name)
+    {
+        for (int i = 0; i < components.size(); i++)
+        {
+            if (components.get(i).getName().equals(name))
+            {
+                return components.remove(i);
+            }
+        }
+        return null;
+    }
+
     public final void update(GameContainer container, int delta) throws SlickException
     {
         //Iterate through collection of Components,
         //calling update on each
     }
-    
+
     public final void init(GameContainer container) throws SlickException
     {
         //Iterate through collection of Components,
         //calling init on each
     }
-    
+
     public final void render(GameContainer container, Graphics g) throws SlickException
     {
         //Iterate through collection of Components,
         //calling render on each
-        
-        
     }
 }
