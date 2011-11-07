@@ -44,6 +44,10 @@ public abstract class Entity
         components = new ArrayList<Component>();
     }
 
+    /**
+     * Get the entity's name
+     * @return the name
+     */
     public String getName()
     {
         return name;
@@ -89,6 +93,10 @@ public abstract class Entity
         return layer;
     }
 
+    /**
+     * Sets the entity's name
+     * @param name The name of the entity
+     */
     public void setName(String name)
     {
         this.name = name;
