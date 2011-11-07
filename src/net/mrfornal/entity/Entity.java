@@ -143,57 +143,19 @@ public abstract class Entity
     }
 
     /**
-     * This method corresponds to the update() method in the Game interface
-     * @see org.newdawn.slick.Game
-     * @param container
-     * @param delta
-     * @throws SlickException
-     */
-    public final void update(GameContainer container, int delta) throws SlickException
-    {
-        //Iterate through collection of Components,
-        //calling update on each
-    }
-
-    /**
-     * This method corresponds to the init() method in the Game interface
-     * @see org.newdawn.slick.Game
-     * @param container
-     * @throws SlickException 
-     */
-    public final void init(GameContainer container) throws SlickException
-    {
-        //Iterate through collection of Components,
-        //calling init on each
-    }
-
-    /**
-     * This method corresponds to the render() method in the Game interface
-     * @see org.newdawn.slick.Game
-     * @param container
-     * @param g
-     * @throws SlickException 
-     */
-    public final void render(GameContainer container, Graphics g) throws SlickException
-    {
-        //Iterate through collection of Components,
-        //calling render on each RenderableComponent
-    }
-    
-    /**
      * Add a component to this entity
      * @param comp 
      */
-     public void addComponent(Component comp)
+    public void addComponent(Component comp)
     {
         components.add(comp);
     }
-     
+
     /**
-      * Removes a component from this entity
-      * @param name The name of the component to remove
-      * @return The removed component, or null if no matching name was found
-      */
+     * Removes a component from this entity
+     * @param name The name of the component to remove
+     * @return The removed component, or null if no matching name was found
+     */
     public Component removeComponent(String name)
     {
         for (int i = 0; i < components.size(); i++)
@@ -206,4 +168,76 @@ public abstract class Entity
         return null;
     }
 
+    /**
+     * This method corresponds to the update() method in the Game interface
+     * @see org.newdawn.slick.Game
+     * @param container
+     * @param delta
+     * @throws SlickException
+     */
+    public final void update(GameContainer container, int delta) throws SlickException
+    {
+        //Iterate through collection of Components,
+        //calling update on each
+
+        customUpdate(container, delta);
+    }
+
+    /**
+     * This method corresponds to the init() method in the Game interface
+     * @see org.newdawn.slick.Game
+     * @param container
+     * @throws SlickException
+     */
+    public final void init(GameContainer container) throws SlickException
+    {
+        //Iterate through collection of Components,
+        //calling init on each
+
+        customInit(container);
+    }
+
+    /**
+     * This method corresponds to the render() method in the Game interface
+     * @see org.newdawn.slick.Game
+     * @param container
+     * @param g
+     * @throws SlickException
+     */
+    public final void render(GameContainer container, Graphics g) throws SlickException
+    {
+        //Iterate through collection of Components,
+        //calling render on each RenderableComponent
+
+        customRender(container, g);
+    }
+
+    /**
+     * Allows a subclass to override and provide custom update functionality
+     * @param container
+     * @param delta
+     */
+    protected void customUpdate(GameContainer container, int delta)
+    {
+        //Override in subclasses to allow an Entity to do something in the update cycle
+    }
+
+    /**
+     * Allows a subclass to override and provide custom init functionality
+     * @param container
+     */
+    protected void customInit(GameContainer container)
+    {
+        //Override in subclasses to allow an Entity to do something in the init cycle
+    }
+
+    /**
+     * Allows a subclass to override and provide custom render functionality
+     * @param container
+     * @param g
+     */
+    protected void customRender(GameContainer container, Graphics g)
+    {
+        //Override in subclasses to allow an Entity to do something in the render cycle
+    }
 }

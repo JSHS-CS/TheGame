@@ -1,4 +1,4 @@
-=The Game Project
+=The Game Project=
 
 This is a student created video game project, authored by:
 
