@@ -4,6 +4,7 @@
  */
 package net.mrfornal.entity;
 
+import net.mrfornal.component.TestMovement;
 import net.mrfornal.component.TestRender;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -19,5 +20,6 @@ public class BasicTestEntity extends Entity
         setPosition(new Vector2f(xPos, yPos));
         setRotation(rotation);
         addComponent(new TestRender(this));
+        addComponent(new TestMovement(this));
     }
 }

@@ -21,6 +21,7 @@ public class TestRender extends RenderableComponent
 {
     private Shape circle;
     private static final float RADIUS = 30.0f;
+    private Line line;
     
     public TestRender(Entity owner)
     {
@@ -30,17 +31,23 @@ public class TestRender extends RenderableComponent
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        g.draw(circle);
+        circle = new Ellipse(getOwner().getPosition().x, getOwner().getPosition().y, RADIUS, RADIUS);
+        float x2 = (float) (getOwner().getPosition().x + (RADIUS * Math.cos(Math.toRadians(getOwner().getRotation()))));
+        float y2 = (float) (getOwner().getPosition().y + (RADIUS * Math.sin(Math.toRadians(getOwner().getRotation()))));
+        Vector2f end = new Vector2f(x2, y2);
+        line = new Line(getOwner().getPosition(), end);
+        
+        if (circle != null)
+            g.draw(circle);
+        
+        if (line != null)
+            g.draw(line);
     }
 
     @Override
     public void update(GameContainer container, int delta)
     {
-        circle = new Ellipse(getOwner().getPosition().x, getOwner().getPosition().y, RADIUS, RADIUS);
-        float x2 = (float) (getOwner().getPosition().x + (30 * Math.cos(getOwner().getRotation())));
-        float y2 = (float) (getOwner().getPosition().x + (30 * Math.sin(getOwner().getRotation())));
-        Vector2f end = new Vector2f(x2, y2);
-        circle.union(new Line(getOwner().getPosition(), end));        
+             
     }
 
     @Override
