@@ -51,4 +51,6 @@ public abstract class Component
     }
     
     public abstract void update(GameContainer container, int delta);
+    
+    public abstract void init(GameContainer container);
 }

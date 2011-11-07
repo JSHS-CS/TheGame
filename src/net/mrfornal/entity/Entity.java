@@ -8,6 +8,7 @@ package net.mrfornal.entity;
 import java.util.List;
 import java.util.ArrayList;
 import net.mrfornal.component.Component;
+import net.mrfornal.component.RenderableComponent;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -127,7 +128,7 @@ public abstract class Entity
      *
      * @param rotation new value of rotation
      */
-    public void setRoation(float rotation)
+    public void setRotation(float rotation)
     {
         this.rotation = rotation;
     }
@@ -179,7 +180,11 @@ public abstract class Entity
     {
         //Iterate through collection of Components,
         //calling update on each
-
+        for (Component c : components)
+        {
+            c.update(container, delta);
+        }        
+        
         customUpdate(container, delta);
     }
 
@@ -193,7 +198,11 @@ public abstract class Entity
     {
         //Iterate through collection of Components,
         //calling init on each
-
+        for (Component c : components)
+        {
+            c.init(container);
+        } 
+        
         customInit(container);
     }
 
@@ -208,6 +217,11 @@ public abstract class Entity
     {
         //Iterate through collection of Components,
         //calling render on each RenderableComponent
+        for (Component c : components)
+        {
+            if (c instanceof RenderableComponent)
+                ((RenderableComponent)c).render(container, g);
+        } 
 
         customRender(container, g);
     }
