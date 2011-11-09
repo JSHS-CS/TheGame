@@ -2,6 +2,7 @@ package net.mrfornal;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.mrfornal.game.BasicEntityGame;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
@@ -27,7 +28,7 @@ public class TheGame
 
         try
         {
-            AppGameContainer game = new AppGameContainer(new TestGame());
+            AppGameContainer game = new AppGameContainer(new BasicEntityGame("Test"));
             game.setDisplayMode(WIDTH, HEIGHT, FULL_SCREEN);
             game.start();
         }

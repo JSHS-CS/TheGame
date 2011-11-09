@@ -5,9 +5,6 @@
  */
 package net.mrfornal.entity;
 
-import java.util.List;
-import java.util.ArrayList;
-import net.mrfornal.component.Component;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -21,12 +18,11 @@ public abstract class Entity
 {
 
     private static int instance_count = 0;
-    private Vector2f position;
-    private String name;
-    private float rotation;
-    private float scale;
-    private int layer;
-    private List<Component> components;
+    protected Vector2f position;
+    protected String name;
+    protected float rotation;
+    protected float scale;
+    protected int layer;
 
     /**
      * Default constructor assigns a consecutively numbered id value
@@ -41,7 +37,6 @@ public abstract class Entity
     {
         this.name = (name == null)
                 ? (getClass().getSimpleName() + instance_count++) : name;
-        components = new ArrayList<Component>();
     }
 
     /**
@@ -54,7 +49,7 @@ public abstract class Entity
     }
 
     /**
-     * Get the Vector2f postion
+     * Get the Vector2f position
      *
      * @return the value of position
      */
@@ -143,45 +138,13 @@ public abstract class Entity
     }
 
     /**
-     * Add a component to this entity
-     * @param comp 
-     */
-    public void addComponent(Component comp)
-    {
-        components.add(comp);
-    }
-
-    /**
-     * Removes a component from this entity
-     * @param name The name of the component to remove
-     * @return The removed component, or null if no matching name was found
-     */
-    public Component removeComponent(String name)
-    {
-        for (int i = 0; i < components.size(); i++)
-        {
-            if (components.get(i).getName().equals(name))
-            {
-                return components.remove(i);
-            }
-        }
-        return null;
-    }
-
-    /**
      * This method corresponds to the update() method in the Game interface
      * @see org.newdawn.slick.Game
      * @param container
      * @param delta
      * @throws SlickException
      */
-    public final void update(GameContainer container, int delta) throws SlickException
-    {
-        //Iterate through collection of Components,
-        //calling update on each
-
-        customUpdate(container, delta);
-    }
+    public abstract void update(GameContainer container, int delta) throws SlickException;
 
     /**
      * This method corresponds to the init() method in the Game interface
@@ -189,14 +152,8 @@ public abstract class Entity
      * @param container
      * @throws SlickException
      */
-    public final void init(GameContainer container) throws SlickException
-    {
-        //Iterate through collection of Components,
-        //calling init on each
-
-        customInit(container);
-    }
-
+    public abstract void init(GameContainer container) throws SlickException;
+    
     /**
      * This method corresponds to the render() method in the Game interface
      * @see org.newdawn.slick.Game
@@ -204,40 +161,5 @@ public abstract class Entity
      * @param g
      * @throws SlickException
      */
-    public final void render(GameContainer container, Graphics g) throws SlickException
-    {
-        //Iterate through collection of Components,
-        //calling render on each RenderableComponent
-
-        customRender(container, g);
-    }
-
-    /**
-     * Allows a subclass to override and provide custom update functionality
-     * @param container
-     * @param delta
-     */
-    protected void customUpdate(GameContainer container, int delta)
-    {
-        //Override in subclasses to allow an Entity to do something in the update cycle
-    }
-
-    /**
-     * Allows a subclass to override and provide custom init functionality
-     * @param container
-     */
-    protected void customInit(GameContainer container)
-    {
-        //Override in subclasses to allow an Entity to do something in the init cycle
-    }
-
-    /**
-     * Allows a subclass to override and provide custom render functionality
-     * @param container
-     * @param g
-     */
-    protected void customRender(GameContainer container, Graphics g)
-    {
-        //Override in subclasses to allow an Entity to do something in the render cycle
-    }
+    public abstract void render(GameContainer container, Graphics g) throws SlickException;
 }
