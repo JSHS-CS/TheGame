@@ -26,4 +26,7 @@ public abstract class RenderableComponent extends Component
     }
     
     public abstract void render(GameContainer container, Graphics g) throws SlickException;
+    {
+       
+    }
 }
