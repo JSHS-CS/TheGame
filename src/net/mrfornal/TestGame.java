@@ -49,12 +49,33 @@ class TestGame extends BasicGame
         {
             spriteScale += 0.1f * delta;
         }
+        
+        if (input.isKeyPressed(Input.KEY_W))
+        {
+            spritePos.y = spritePos.y - 10;
+        }
+        
+        if (input.isKeyPressed(Input.KEY_D))
+        {
+            spritePos.x = spritePos.x + 10;
+        }
+        
+        if (input.isKeyPressed(Input.KEY_A))
+        {
+            spritePos.x = spritePos.x - 10;
+        }
+        if (input.isKeyPressed(Input.KEY_S))
+        {
+            spritePos.y = spritePos.y + 10;
+        }
+            
     }
 
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        sprite.draw(spritePos.x, spritePos.y, spriteScale);
+        sprite.draw(spritePos.x - sprite.getWidth()/2, spritePos.y - sprite.getHeight()/2, spriteScale);
+        // This code should center the sprite ^^
     }
     
 }

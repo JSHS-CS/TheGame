@@ -1,13 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.mrfornal.entity;
 
 import java.util.ArrayList;
 
 /**
- *
+ * This singleton class manages all the entities in the game.
+ * 
+ * All entities should register themselves with the EntityManager.
+ * 
  * @author pham266693
  */
 public class EntityManager
