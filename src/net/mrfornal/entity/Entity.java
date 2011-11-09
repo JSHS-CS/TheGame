@@ -127,7 +127,7 @@ public abstract class Entity
      *
      * @param rotation new value of rotation
      */
-    public void setRoation(float rotation)
+    public void setRotation(float rotation)
     {
         this.rotation = rotation;
     }
