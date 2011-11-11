@@ -75,8 +75,6 @@ public class BasicTestEntity extends Entity
     {
         g.setColor(color);
         g.drawOval(position.x - RADIUS, position.y - RADIUS, RADIUS * 2, RADIUS * 2);
-        float x2 = (float) ((position.x - RADIUS) + (RADIUS * 1.5 * Math.cos(Math.toRadians(rotation))));
-        float y2 = (float) ((position.y - RADIUS) + (RADIUS * 1.5 * Math.sin(Math.toRadians(rotation))));
         g.draw(new Line(position, position.copy().add(velocity.copy().scale(RADIUS))));
     }
 }
