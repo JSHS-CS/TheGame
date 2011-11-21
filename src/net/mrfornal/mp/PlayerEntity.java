@@ -6,7 +6,6 @@ package net.mrfornal.mp;
 
 import java.util.ArrayList;
 import net.mrfornal.entity.Entity;
-import net.mrfornal.entity.EntityManager;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -17,122 +16,14 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author pham266693
  */
-public class BlockEntity extends Entity
+public class PlayerEntity extends BlockEntity
 {
-    // G the Universal Gravitational Constant (6.67x10-11 N.m2/kg2), 
-    // It is scaled up to increase gravitational attraction
 
-    public static final float ugc = (float) (6.67 * Math.pow(10, -3));
-    protected Vector2f velocity;
-    protected Shape block;
-    protected float mass;
-    protected Vector2f acceleration;
-    protected int hp;
-    protected int maxHP; //TODO: Put maxhp in a static class that handles block types and their respective maxhp values (HashMap)
-
-    public BlockEntity(Shape s, String name, float mass)
+    public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp)
     {
-        this(s, name, mass, 0, 0);
+        super(s, name, mass, x, y, vX, vY, maxhp);
     }
 
-    public BlockEntity(Shape s, String name, float mass, float x, float y)
-    {
-        this(s, name, mass, x, y, 0, 0);
-    }
-
-    public BlockEntity(Shape s, String name, float mass, float x, float y, float vX, float vY)
-    {
-        this(s, name, mass, x, y, vX, vY, 100);
-    }
-
-    public BlockEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxHP)
-    {
-        super(name);
-        position = new Vector2f(x, y);
-        velocity = new Vector2f(vX, vY);
-        block = s;
-        this.mass = mass;
-        block.setX(position.x);
-        block.setY(position.y);
-        acceleration = new Vector2f();
-        this.maxHP = maxHP;
-        hp = maxHP;
-    }
-
-    public Vector2f getVelocity()
-    {
-        return velocity;
-    }
-
-    public void setVelocity(Vector2f velocity)
-    {
-        this.velocity = velocity;
-    }
-
-    public Shape getBlock()
-    {
-        return block;
-    }
-
-    public void setBlock(Shape block)
-    {
-        this.block = block;
-    }
-
-    public float getMass()
-    {
-        return mass;
-    }
-
-    public void setMass(float mass)
-    {
-        this.mass = mass;
-    }
-
-    public Vector2f getAcceleration()
-    {
-        return acceleration;
-    }
-
-    public void setAcceleration(Vector2f acceleration)
-    {
-        this.acceleration = acceleration;
-    }
-
-    public void takeDamage(int dmg)
-    {
-        hp -= dmg;
-    }
-
-    public void restoreHP(int restore)
-    {
-        hp += restore;
-        if (maxHP < restore)
-        {
-            hp = maxHP;
-        }
-    }
-
-    public void restoreAllHP()
-    {
-        hp = maxHP;
-    }
-
-    public int getHP()
-    {
-        return hp;
-    }
-
-    /*
-     * If F is the force due to gravity, 
-     * g the acceleration due to gravity, 
-     * G the Universal Gravitational Constant (6.67x10-11 N.m2/kg2), 
-     * m the mass and r the distance between two objects. 
-     * Then F = G*m1*m2/r^2
-     * 
-     * F = m1*a
-     * 
-     */
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
@@ -142,11 +33,10 @@ public class BlockEntity extends Entity
         {
             if (!e.equals(this) && ((BlockEntity) e).getMass() > 50)
             {
-
-                float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX();
-                float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
-                float x2 = /*e.getPosition().x + */ ((BlockEntity) e).getBlock().getCenterX();
-                float y2 = /*e.getPosition().y + */ ((BlockEntity) e).getBlock().getCenterY();
+                float x1 = /*this.getPosition().x + */this.getBlock().getCenterX();
+                float y1 = /*this.getPosition().y + */this.getBlock().getCenterY();
+                float x2 = /*e.getPosition().x + */((BlockEntity) e).getBlock().getCenterX();
+                float y2 = /*e.getPosition().y + */((BlockEntity) e).getBlock().getCenterY();
                 float m2 = ((BlockEntity) e).getMass();
 
                 //old acceleration - x and y - messed up when both objects were near each other
@@ -226,11 +116,9 @@ public class BlockEntity extends Entity
     {
         g.draw(block);
         g.drawString("" + hp, getPosition().x, getPosition().y);
-    }
-
-    @Override
-    public String toString()
-    {
-        return "BlockEntity{" + "block=(" + (int) (block.getX()) + ", " + (int) (block.getY()) + ")}";
+        g.drawLine(block.getCenterX(),
+                block.getCenterY(),
+                (float) 200 * velocity.x + block.getCenterX(),
+                (float) 200 * velocity.y + block.getCenterY());
     }
 }

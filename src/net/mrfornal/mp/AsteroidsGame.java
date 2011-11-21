@@ -25,7 +25,7 @@ import org.newdawn.slick.geom.Rectangle;
  *
  * @author sfornal
  */
-public class BasicPhysicsGame extends BasicGame
+public class AsteroidsGame extends BasicGame
 {
 
     private MyEntityManager manager;
@@ -44,7 +44,7 @@ public class BasicPhysicsGame extends BasicGame
 
         try
         {
-            AppGameContainer game = new AppGameContainer(new BasicPhysicsGame("Test"));
+            AppGameContainer game = new AppGameContainer(new AsteroidsGame("Test"));
             game.setDisplayMode(WIDTH, HEIGHT, FULL_SCREEN);
             game.start();
         } catch (SlickException ex)
@@ -53,7 +53,7 @@ public class BasicPhysicsGame extends BasicGame
         }
     }
 
-    public BasicPhysicsGame(String title)
+    public AsteroidsGame(String title)
     {
         super(title);
         manager = MyEntityManager.getInstance();
@@ -64,8 +64,8 @@ public class BasicPhysicsGame extends BasicGame
     {
         container.setMinimumLogicUpdateInterval(25);
 
-        BlockEntity b = new BlockEntity(new Circle(0, 0, 35), "TestBlock2", 3000, 330, 295, +.0f, .0f);
-        BlockEntity a = new BlockEntity(new Circle(0, 0, 3), "TestBlock1", 5, 400, 180, -.37f, -.15f);
+        BlockEntity b = new BlockEntity(new Circle(0, 0, 35), "TestBlock2", 3000, 360, 310, +.0f, 0);
+        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 15), "TestBlock1", 40, 50, 50, 0.1f, 0.1f, 200);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
         manager.addEntity(a);
         manager.addEntity(b);
@@ -81,21 +81,21 @@ public class BasicPhysicsGame extends BasicGame
         
         if (i.isKeyDown(Input.KEY_UP))
         {
-        b.getPosition().set(b.getPosition().x,b.getPosition().y-.1f);
+            b.getPosition().set(b.getPosition().x,b.getPosition().y-.1f);
         }
         if (i.isKeyDown(Input.KEY_LEFT))
         {
-        b.getPosition().set(b.getPosition().x-.1f,b.getPosition().y);
+            b.getPosition().set(b.getPosition().x-.1f,b.getPosition().y);
         }
         if (i.isKeyDown(Input.KEY_RIGHT))
         {
-        b.getPosition().set(b.getPosition().x+.1f,b.getPosition().y);
+            b.getPosition().set(b.getPosition().x+.1f,b.getPosition().y);
         }
         if (i.isKeyDown(Input.KEY_DOWN))
         {
-        b.getPosition().set(b.getPosition().x,b.getPosition().y+.1f);
+            b.getPosition().set(b.getPosition().x,b.getPosition().y+.1f);
         }
-         */
+*/
 
         if (i.isKeyPressed(Input.KEY_ESCAPE))
         {
