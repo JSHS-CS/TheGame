@@ -18,6 +18,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
 /**
@@ -63,12 +64,12 @@ public class BasicPhysicsGame extends BasicGame
     {
         container.setMinimumLogicUpdateInterval(25);
         
-        BlockEntity b = new BlockEntity(new Rectangle(0, 0,40,40), "TestBlock2", 1000, 200, 400, +.1f, 0);
-        BlockEntity c = new BlockEntity(new Rectangle(0, 0, 40, 40), "TestBlock3", 1000, 400, 200, -.1f, 0);
-        BlockEntity a = new BlockEntity(new Rectangle(0, 0, 40, 40), "TestBlock3", 1000, 300, 300, 0, 0);
-        manager.addEntity(b);
-        manager.addEntity(c);
+        BlockEntity b = new BlockEntity(new Circle(0, 0,35), "TestBlock2", 3000, 360, 310, +.0f, 0);
+        BlockEntity a = new BlockEntity(new Circle(0, 0, 3), "TestBlock1", 5, 400, 250, -.28f, 0);
+        //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
         manager.addEntity(a);
+        manager.addEntity(b);
+       // manager.addEntity(c);
     }
 
     @Override

@@ -110,23 +110,26 @@ public class BlockEntity extends Entity
         {
             if (!e.equals(this))
             {
-                float x1 = this.getPosition().x;
-                float y1 = this.getPosition().y;
-                float x2 = e.getPosition().x;
-                float y2 = e.getPosition().y;
+                
+                float x1 = this.getPosition().x + this.getBlock().getCenterX();
+                float y1 = this.getPosition().y + this.getBlock().getCenterY();
+                float x2 = e.getPosition().x + ((BlockEntity) e).getBlock().getCenterX();
+                float y2 = e.getPosition().y+ ((BlockEntity) e).getBlock().getCenterY();
                 float m2 = ((BlockEntity) e).getMass();
 
                 //old acceleration - x and y - messed up when both objects were near each other
 
 //                float accX =  ugc * m2 / (x2 - x1);
 //                float accY =  ugc * m2 / (y2 - y1);
+                
+                
+                
+                float acc = (float) (ugc * m2 /(Math.pow(x2-x1, 2)+Math.pow(y2-y1, 2))) ;
 
-                float acc = ugc * m2 / this.getPosition().distanceSquared(e.getPosition());
+                double theta = Math.atan(Math.abs((y2 - y1) / (x2 - x1)));
 
-                double theta = Math.atan(Math.abs((y2 - y1)/( x2 - x1)));
-
-                float accX = acc * (float) Math.cos(theta);
-                float accY = acc * (float) Math.sin(theta);
+                float accX = Math.abs(acc * (float) Math.cos(theta));
+                float accY = Math.abs(acc * (float) Math.sin(theta));
 
                 //if the other object is to the left of this object, move negative x
                 if (x2 < x1)
@@ -144,6 +147,7 @@ public class BlockEntity extends Entity
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
                     velocity.set(-velocity.x, -velocity.y);
+                    setPosition(getPosition().add(velocity));
                 }
             }
         }
@@ -154,6 +158,26 @@ public class BlockEntity extends Entity
 
         block.setX(getPosition().x);
         block.setY(getPosition().y);
+
+
+        //prevents from leaving screen
+        if (container.getWidth()+200 < position.x)
+        {
+            velocity.set(-velocity.x, velocity.y);
+        }
+        if (container.getHeight()+200 < position.y)
+        {
+            velocity.set(velocity.x, -velocity.y);
+        }
+        if (-200 > position.x)
+        {
+            velocity.set(-velocity.x, velocity.y);
+        }
+        if (-200 > position.y)
+        {
+            velocity.set(velocity.x, -velocity.y);
+        }
+
         System.out.println(this.toString());
 
 
