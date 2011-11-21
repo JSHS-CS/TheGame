@@ -2,29 +2,38 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal;
+package net.mrfornal.far;
 
-import org.newdawn.slick.BasicGame;
+import net.mrfornal.*;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.Color;
+import net.mrfornal.entity.BasicTestEntity;
+import net.mrfornal.entity.Entity;
+import net.mrfornal.entity.EntityManager;
+import org.newdawn.slick.BasicGame;
+
+
+
+;
 
 /**
  *
  * @author sfornal
  */
-class TestGame extends BasicGame
+class FernandoGame extends BasicGame
 {
     private Image sprite;
     private Vector2f spritePos;
     private float spriteScale;
 
-    public TestGame()
+    public FernandoGame(String title)
     {
-        super("TestGame");
+        super(title);
     }
 
     @Override
@@ -44,37 +53,31 @@ class TestGame extends BasicGame
         {
             container.exit();
         }
-        
         if (input.isKeyPressed(Input.KEY_SPACE))
         {
             spriteScale += 0.1f * delta;
         }
-        
-        if (input.isKeyPressed(Input.KEY_W))
-        {
-            spritePos.y = spritePos.y - 10;
-        }
-        
         if (input.isKeyPressed(Input.KEY_D))
         {
             spritePos.x = spritePos.x + 10;
         }
-        
         if (input.isKeyPressed(Input.KEY_A))
         {
             spritePos.x = spritePos.x - 10;
         }
-        if (input.isKeyPressed(Input.KEY_S))
+        if (spritePos.x == 0 && input.isKeyPressed(Input.KEY_A))
         {
-            spritePos.y = spritePos.y + 10;
+            spritePos.x = spritePos.x + 10;
         }
-            
+        
+               
+               
     }
 
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        sprite.draw(spritePos.x - sprite.getWidth()/2, spritePos.y - sprite.getHeight()/2, spriteScale);
+        sprite.draw(spritePos.x - sprite.getWidth()/2, 500);
         // This code should center the sprite ^^
     }
     
