@@ -38,7 +38,7 @@ public class BasicEntityGame extends BasicGame
             float x = (float) (Math.random() * container.getWidth());
             float y = (float) (Math.random() * container.getHeight());
 
-            Color col = (Math.random() < 0.02) ? Color.white : Color.yellow;
+            Color col = (Math.random() < 0.99) ? Color.white : Color.yellow;
 
             BasicTestEntity e = new BasicTestEntity(x, y, rot, col);
             manager.addEntity(e);
