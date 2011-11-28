@@ -21,19 +21,28 @@ public class BulletEntity extends Entity
     private float initSpeed; //TODO: Make unique bullet speeds - NOT IMPLEMENTED
     private int damage; //TODO: Put in a static class that handles bullet types and their assigned damage values (HashMap)
     private Vector2f velocity;
+    private String originBlock;
 
     public BulletEntity()
     {
+        super("bullet");
     }
 
-    public BulletEntity(int dmg, Vector2f v)
+    public BulletEntity(int dmg, Vector2f v, Vector2f pos,double theta,String origin)
     {
+        super("bullet");
+        velocity = new Vector2f();
         damage = dmg;
         //initSpeed is a 100 at default - TODO: implement initSpeed
-        velocity = v;
-        Vector2f temp = new Vector2f(2/*initSpeed*/, 0);
-        temp.sub(v.getTheta());
-        velocity.add(temp);
+        velocity.set(v);
+        Vector2f temp = new Vector2f(.5f/*initSpeed*/, 0);
+        temp.setTheta(theta);
+        velocity.add(temp); //boost in speed for bullet to fire
+        
+        Vector2f newPos = new Vector2f(velocity.x*10,velocity.y*10);
+        newPos.setTheta(theta);
+        setPosition(pos.add(newPos)); //boost in position so bullet travels past player block
+        originBlock = origin; //the name of the block the bullet spawned from
     }
 
     @Override
@@ -52,19 +61,22 @@ public class BulletEntity extends Entity
             }
         }
 
+        position.add(velocity);
+
         for (int i = 0; i < temp.size(); i++)
         {
             BlockEntity e = ((BlockEntity) temp.get(i));
-            if (e.getBlock().contains(this.getPosition().x, this.getPosition().y))
+            //will not hit original block that fired the bullet
+            if (!e.getName().equals(originBlock) &&e.getBlock().contains(this.getPosition().x, this.getPosition().y))
             {
                 //damage here!
                 //remove bullet from MyEntityManager
                 //TODO: Make damage/removal better!
                 temp2.remove(index);
                 e.takeDamage(this.damage);
-                    
+
                 //destroy BlockEntity if below 0 hp
-                if(e.getHP()<0)
+                if (e.getHP() < 0)
                 {
                     temp.remove(i);
                 }

@@ -23,11 +23,17 @@ public class MyEntityManager
     private MyEntityManager()
     {
         entities = new ArrayList<Entity>();
+        blockEntities = new ArrayList<BlockEntity>();
+        bulletEntities = new ArrayList<BulletEntity>();
     }
 
     public ArrayList<Entity> getAllEntities()
     {
-        return entities;
+        ArrayList<Entity> entityList = new ArrayList<Entity>();
+        entityList.addAll(entities);
+        entityList.addAll(blockEntities);
+        entityList.addAll(bulletEntities);
+        return entityList;
     }
 
     public ArrayList<Entity> getEntitiesOfType(Class c)

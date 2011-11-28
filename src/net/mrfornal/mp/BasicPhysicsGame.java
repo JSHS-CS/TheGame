@@ -67,14 +67,22 @@ public class BasicPhysicsGame extends BasicGame
         BlockEntity b = new BlockEntity(new Circle(0, 0, 35), "TestBlock2", 3000, 330, 295, +.0f, .0f);
         BlockEntity a = new BlockEntity(new Circle(0, 0, 3), "TestBlock1", 5, 400, 180, -.37f, -.15f);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
-        manager.addEntity(a);
-        manager.addEntity(b);
+        manager.addBlockEntity(a);
+        manager.addBlockEntity(b);
         // manager.addEntity(c);
     }
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
+        System.out.println("====="); //separator for reading output
+        
+        for (Entity e : manager.getAllEntities())
+        {
+            e.update(container, delta);
+        }
+        
+        
         Input i = container.getInput();
         /*
         BlockEntity b = (BlockEntity) manager.getEntity("TestBlock2");
@@ -102,10 +110,6 @@ public class BasicPhysicsGame extends BasicGame
             container.exit();
         }
 
-        for (Entity e : manager.getAllEntities())
-        {
-            e.update(container, delta);
-        }
 
         if (i.isKeyPressed(Input.KEY_1))
         {

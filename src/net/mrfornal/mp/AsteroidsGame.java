@@ -64,47 +64,48 @@ public class AsteroidsGame extends BasicGame
     {
         container.setMinimumLogicUpdateInterval(25);
 
-        BlockEntity b = new BlockEntity(new Circle(0, 0, 35), "TestBlock2", 3000, 360, 310, +.0f, 0);
-        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 15), "TestBlock1", 40, 50, 50, 0.1f, 0.1f, 200);
+        BlockEntity b = new BlockEntity(new Circle(0, 0, 35), "TestBlock2", 1500, 380, 330, +.0f, 0, 1000);
+        //BlockEntity c = new BlockEntity(new Circle(0, 0, 25), "TestBlock2", 1000, 100, 100, +.0f, 0, 500);
+        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 10), "TestBlock1", 40, 400, 180, -.22f, .05f, 200);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
-        manager.addEntity(a);
-        manager.addEntity(b);
-        // manager.addEntity(c);
+        manager.addBlockEntity(a);
+        manager.addBlockEntity(b);
+        //manager.addBlockEntity(c);
     }
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
+        for (Entity e : manager.getAllEntities())
+        {
+            e.update(container, delta);
+        }
+
         Input i = container.getInput();
         /*
         BlockEntity b = (BlockEntity) manager.getEntity("TestBlock2");
         
         if (i.isKeyDown(Input.KEY_UP))
         {
-            b.getPosition().set(b.getPosition().x,b.getPosition().y-.1f);
+        b.getPosition().set(b.getPosition().x,b.getPosition().y-.1f);
         }
         if (i.isKeyDown(Input.KEY_LEFT))
         {
-            b.getPosition().set(b.getPosition().x-.1f,b.getPosition().y);
+        b.getPosition().set(b.getPosition().x-.1f,b.getPosition().y);
         }
         if (i.isKeyDown(Input.KEY_RIGHT))
         {
-            b.getPosition().set(b.getPosition().x+.1f,b.getPosition().y);
+        b.getPosition().set(b.getPosition().x+.1f,b.getPosition().y);
         }
         if (i.isKeyDown(Input.KEY_DOWN))
         {
-            b.getPosition().set(b.getPosition().x,b.getPosition().y+.1f);
+        b.getPosition().set(b.getPosition().x,b.getPosition().y+.1f);
         }
-*/
+         */
 
         if (i.isKeyPressed(Input.KEY_ESCAPE))
         {
             container.exit();
-        }
-
-        for (Entity e : manager.getAllEntities())
-        {
-            e.update(container, delta);
         }
 
         if (i.isKeyPressed(Input.KEY_1))

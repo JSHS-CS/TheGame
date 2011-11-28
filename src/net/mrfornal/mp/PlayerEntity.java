@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import net.mrfornal.entity.Entity;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
@@ -19,25 +20,34 @@ import org.newdawn.slick.geom.Vector2f;
 public class PlayerEntity extends BlockEntity
 {
 
+    //governs what direction input will cause to accelerate
+    private double theta;
+    private Vector2f direction;
+
     public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp)
     {
         super(s, name, mass, x, y, vX, vY, maxhp);
+        direction = new Vector2f(.003f, 0); //default acceleration
+        direction.setTheta(theta);
     }
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
-        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
+        Input i = container.getInput();
+//        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
+        ArrayList<BlockEntity> list = MyEntityManager.getInstance().getBlockEntities();
 
-        for (Entity e : list)
+        for (BlockEntity e : list)
         {
-            if (!e.equals(this) && ((BlockEntity) e).getMass() > 50)
+            if (!e.equals(this) && e.getMass() > 50)
             {
-                float x1 = /*this.getPosition().x + */this.getBlock().getCenterX();
-                float y1 = /*this.getPosition().y + */this.getBlock().getCenterY();
-                float x2 = /*e.getPosition().x + */((BlockEntity) e).getBlock().getCenterX();
-                float y2 = /*e.getPosition().y + */((BlockEntity) e).getBlock().getCenterY();
-                float m2 = ((BlockEntity) e).getMass();
+
+                float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX();
+                float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
+                float x2 = /*e.getPosition().x + */ e.getBlock().getCenterX();
+                float y2 = /*e.getPosition().y + */ e.getBlock().getCenterY();
+                float m2 = e.getMass();
 
                 //old acceleration - x and y - messed up when both objects were near each other
 
@@ -69,6 +79,9 @@ public class PlayerEntity extends BlockEntity
                 velocity.add(acceleration);
                 //accelerate based on position of other blocks
 
+
+
+
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
                     velocity.set(-velocity.x, -velocity.y);
@@ -76,6 +89,35 @@ public class PlayerEntity extends BlockEntity
                 }
             }
         }
+
+        direction.setTheta(theta);
+        if (i.isKeyDown(Input.KEY_W))
+        {
+            velocity.add(direction);
+        }
+        if (i.isKeyDown(Input.KEY_A))
+        {
+            theta -= 1;
+        }
+        if (i.isKeyDown(Input.KEY_S))
+        {
+            velocity.add(direction.negate());
+        }
+        if (i.isKeyDown(Input.KEY_D))
+        {
+            theta += 1;
+        }
+        if (i.isKeyPressed(Input.KEY_LCONTROL))
+        {
+            Vector2f pos=new Vector2f(block.getCenterX(),block.getCenterY());
+            
+            
+            MyEntityManager.getInstance().addBulletEntity(new BulletEntity(10, velocity, pos,theta,name));
+        }
+        System.out.println(direction.toString());
+        System.out.println(theta);
+
+
         setPosition(getPosition().add(velocity));
 
         block.setX(getPosition().x);
@@ -83,24 +125,23 @@ public class PlayerEntity extends BlockEntity
 
 
         //prevents from leaving screen
-        if (container.getWidth() + 200 < position.x)
+        if (container.getWidth() + 50 < position.x)
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (container.getHeight() + 200 < position.y)
+        if (container.getHeight() + 50 < position.y)
         {
             velocity.set(velocity.x, -velocity.y);
         }
-        if (-200 > position.x)
+        if (-50 > position.x)
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (-200 > position.y)
+        if (-50 > position.y)
         {
             velocity.set(velocity.x, -velocity.y);
         }
 
-        System.out.println(this.toString());
 
 
     }
@@ -116,9 +157,16 @@ public class PlayerEntity extends BlockEntity
     {
         g.draw(block);
         g.drawString("" + hp, getPosition().x, getPosition().y);
+
+        //draws a line that represents velocity vector
+//        g.drawLine(block.getCenterX(),
+//                block.getCenterY(),
+//                (float) 200 * velocity.x + block.getCenterX(),
+//                (float) 200 * velocity.y + block.getCenterY());
+        //draws a line that represents player direction
         g.drawLine(block.getCenterX(),
                 block.getCenterY(),
-                (float) 200 * velocity.x + block.getCenterX(),
-                (float) 200 * velocity.y + block.getCenterY());
+                (float) 30000 * direction.x + block.getCenterX(),
+                (float) 30000 * direction.y + block.getCenterY());
     }
 }

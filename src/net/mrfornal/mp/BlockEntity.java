@@ -136,18 +136,19 @@ public class BlockEntity extends Entity
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
-        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
+//        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
+        ArrayList<BlockEntity> list = MyEntityManager.getInstance().getBlockEntities();
 
-        for (Entity e : list)
+        for (BlockEntity e : list)
         {
-            if (!e.equals(this) && ((BlockEntity) e).getMass() > 50)
+            if (!e.equals(this) && e.getMass() > 50)
             {
 
                 float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX();
                 float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
-                float x2 = /*e.getPosition().x + */ ((BlockEntity) e).getBlock().getCenterX();
-                float y2 = /*e.getPosition().y + */ ((BlockEntity) e).getBlock().getCenterY();
-                float m2 = ((BlockEntity) e).getMass();
+                float x2 = /*e.getPosition().x + */ e.getBlock().getCenterX();
+                float y2 = /*e.getPosition().y + */ e.getBlock().getCenterY();
+                float m2 = e.getMass();
 
                 //old acceleration - x and y - messed up when both objects were near each other
 
@@ -191,26 +192,24 @@ public class BlockEntity extends Entity
         block.setX(getPosition().x);
         block.setY(getPosition().y);
 
-
         //prevents from leaving screen
-        if (container.getWidth() + 200 < position.x)
+        if (container.getWidth() + 50 < position.x)
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (container.getHeight() + 200 < position.y)
+        if (container.getHeight() + 50 < position.y)
         {
             velocity.set(velocity.x, -velocity.y);
         }
-        if (-200 > position.x)
+        if (-50 > position.x)
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (-200 > position.y)
+        if (-50 > position.y)
         {
             velocity.set(velocity.x, -velocity.y);
         }
 
-        System.out.println(this.toString());
 
 
     }
