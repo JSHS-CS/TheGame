@@ -22,6 +22,7 @@ public class BlockEntity extends Entity
     // G the Universal Gravitational Constant (6.67x10-11 N.m2/kg2), 
     // It is scaled up to increase gravitational attraction
 
+    
     public static final float ugc = (float) (6.67 * Math.pow(10, -3));
     protected Vector2f velocity;
     protected Shape block;
@@ -180,11 +181,30 @@ public class BlockEntity extends Entity
                 velocity.add(acceleration);
                 //accelerate based on position of other blocks
 
+                
+                
+                //Collision with another block
+                
+                
+                if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
+                {
+                    Vector2f positionCalc = new Vector2f(block.getCenterX(),block.getCenterY());
+                    Vector2f positionCalc2 = new Vector2f(e.getBlock().getCenterX(),e.getBlock().getCenterY());
+                    positionCalc.add(positionCalc2);
+                    double theta2 = positionCalc.getTheta();
+                    double theta1 = velocity.getTheta();
+                    velocity.setTheta(theta1+2*theta2);
+                }
+                
+                //old collision - just reversed velocity vector
+                /*
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
                     velocity.set(-velocity.x, -velocity.y);
                     setPosition(getPosition().add(velocity));
                 }
+                 */
+                 
             }
         }
         setPosition(getPosition().add(velocity));

@@ -82,11 +82,28 @@ public class PlayerEntity extends BlockEntity
 
 
 
+                
+                //Collision with another block
+                
+                
+                if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
+                {
+                    Vector2f positionCalc = new Vector2f();
+                    positionCalc.set(position);
+                    positionCalc.add(e.getPosition());
+                    double theta2 = positionCalc.getTheta();
+                    double theta1 = velocity.getTheta();
+                    velocity.setTheta(theta1+2*theta2);
+                }
+                
+                //old collision - just reversed velocity vector
+                /*
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
                     velocity.set(-velocity.x, -velocity.y);
                     setPosition(getPosition().add(velocity));
                 }
+                 */
             }
         }
 
