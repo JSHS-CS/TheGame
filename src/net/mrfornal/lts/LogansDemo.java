@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal.game;
+package net.mrfornal.lts;
 
+import net.mrfornal.game.*;
 import org.newdawn.slick.Color;
 import net.mrfornal.entity.BasicTestEntity;
 import net.mrfornal.entity.Entity;
@@ -13,65 +14,56 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 /**
  *
- * @author sfornal
+ * @author stone205446
  */
-public class BasicEntityGame extends BasicGame
+public class LogansDemo extends BasicGame
 {
-
-    private EntityManager manager;
-
-    public BasicEntityGame(String title)
+    private EntityManager eManager;
+    
+    public LogansDemo(String title)
     {
         super(title);
-        manager = EntityManager.getInstance();
+        eManager = EntityManager.getInstance();      
     }
-
+    
     @Override
     public void init(GameContainer container) throws SlickException
     {
-        for (int i = 0; i < 100; i++)
-        {
-            float rot = (float) (Math.random() * 360);
-            float x = (float) (Math.random() * container.getWidth());
-            float y = (float) (Math.random() * container.getHeight());
+        
+        eManager.addEntity(new Car(new Vector2f(), 0));
 
-            Color col = (Math.random() < 0.99) ? Color.white : Color.yellow;
-
-            BasicTestEntity e = new BasicTestEntity(x, y, rot, col);
-            manager.addEntity(e);
-        }
-
-        for (Entity e : manager.getAllEntities())
+        for (Entity e : eManager.getAllEntities())
         {
             e.init(container);
-        }
+        }        
     }
-
+    
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
         Input i = container.getInput();
-
-        if (i.isKeyPressed(Input.KEY_ESCAPE))
-        {
-            container.exit();
-        }
-
-        for (Entity e : manager.getAllEntities())
+        for (Entity e : eManager.getAllEntities())
         {
             e.update(container, delta);
         }
+        if(i.isKeyPressed(Input.KEY_ESCAPE))
+        {
+            System.exit(0);
+        }
+        
     }
-
+    
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        for (Entity e : manager.getAllEntities())
+        for (Entity e : eManager.getAllEntities())
         {
             e.render(container, g);
         }
     }
+    
 }

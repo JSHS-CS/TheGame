@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal.game;
+package net.mrfornal.scf;
 
+import net.mrfornal.game.*;
 import org.newdawn.slick.Color;
 import net.mrfornal.entity.BasicTestEntity;
 import net.mrfornal.entity.Entity;
@@ -13,17 +14,18 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 /**
  *
  * @author sfornal
  */
-public class BasicEntityGame extends BasicGame
+public class StrandedGame extends BasicGame
 {
 
     private EntityManager manager;
 
-    public BasicEntityGame(String title)
+    public StrandedGame(String title)
     {
         super(title);
         manager = EntityManager.getInstance();
@@ -38,11 +40,13 @@ public class BasicEntityGame extends BasicGame
             float x = (float) (Math.random() * container.getWidth());
             float y = (float) (Math.random() * container.getHeight());
 
-            Color col = (Math.random() < 0.99) ? Color.white : Color.yellow;
+            Color col = (Math.random() < 0.02) ? Color.white : Color.blue;
 
             BasicTestEntity e = new BasicTestEntity(x, y, rot, col);
             manager.addEntity(e);
         }
+        
+        manager.addEntity(new Ship(new Vector2f(), 45, 1.0f, 1, Color.red));
 
         for (Entity e : manager.getAllEntities())
         {

@@ -1,5 +1,6 @@
-package net.mrfornal.entity;
+package net.mrfornal.ScottieD;
 
+import net.mrfornal.entity.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -11,7 +12,7 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author sfornal
  */
-public class BasicTestEntity extends Entity
+public class EntityScott extends Entity
 {
     private static final int LAYER = 1;
     private static final float RADIUS = 15;
@@ -24,12 +25,12 @@ public class BasicTestEntity extends Entity
      * @param yPos
      * @param rotation 
      */
-    public BasicTestEntity(float xPos, float yPos, float rotation, Color col)
+    public EntityScott(float xPos, float yPos, float rotation, Color col)
     {
         super();
         setPosition(new Vector2f(xPos, yPos));
-        setRotation(rotation);
         setLayer(LAYER);
+        setRotation(rotation);
         velocity = new Vector2f(0);
         color = col;
     }
@@ -43,13 +44,15 @@ public class BasicTestEntity extends Entity
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
+        velocity = new Vector2f(getRotation());
         position.add(velocity);
         
         if (position.x > container.getWidth()) position.x -= container.getWidth();
         if (position.y > container.getHeight()) position.y -= container.getHeight();
         
         if (position.x < 0) position.x += container.getWidth();
-        if (position.y < 0) position.x += container.getHeight();
+        if (position.y < 0) position.y += container.getHeight();
+
     }
 
     /**
@@ -60,8 +63,8 @@ public class BasicTestEntity extends Entity
     @Override
     public void init(GameContainer container) throws SlickException
     {
-        velocity = new Vector2f(rotation);
-        velocity.normalise().scale((float)(Math.random() * 3) + 1);
+        velocity = new Vector2f(0);
+        //velocity.normalise().scale(((float)(Math.random()*.1)));
     }
 
     /**
@@ -75,6 +78,8 @@ public class BasicTestEntity extends Entity
     {
         g.setColor(color);
         g.drawOval(position.x - RADIUS, position.y - RADIUS, RADIUS * 2, RADIUS * 2);
+        g.drawString(name, position.x, position.y + 100);
+        g.drawString("TESTIFICATE", position.x, position.y + 115);
         g.draw(new Line(position, position.copy().add(velocity.copy().scale(RADIUS))));
     }
 }
