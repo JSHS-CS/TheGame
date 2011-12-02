@@ -22,13 +22,13 @@ public class BulletEntity extends Entity
     private int damage; //TODO: Put in a static class that handles bullet types and their assigned damage values (HashMap)
     private Vector2f velocity;
     private String originBlock;
-
+    
     public BulletEntity()
     {
         super("bullet");
     }
 
-    public BulletEntity(int dmg, Vector2f v, Vector2f pos,double theta,String origin)
+    public BulletEntity(int dmg, Vector2f v, Vector2f pos, double theta, String origin)
     {
         super("bullet");
         velocity = new Vector2f();
@@ -38,11 +38,16 @@ public class BulletEntity extends Entity
         Vector2f temp = new Vector2f(.5f/*initSpeed*/, 0);
         temp.setTheta(theta);
         velocity.add(temp); //boost in speed for bullet to fire
-        
-        Vector2f newPos = new Vector2f(velocity.x*10,velocity.y*10);
+
+        Vector2f newPos = new Vector2f(10,0); //10 pixel radius of bullet firing
         newPos.setTheta(theta);
         setPosition(pos.add(newPos)); //boost in position so bullet travels past player block
         originBlock = origin; //the name of the block the bullet spawned from
+    }
+
+    public void addToManager()
+    {
+        MyEntityManager.getInstance().addBulletEntity(this);
     }
 
     @Override
@@ -61,13 +66,23 @@ public class BulletEntity extends Entity
             }
         }
 
+        //removes if off screen
+        if (container.getWidth() + 50 < position.x || container.getHeight() + 50 < position.y)
+        {
+            temp2.remove(index);
+        }
+        if (-50 > position.x || -50 > position.y)
+        {
+            temp2.remove(index);
+        }
+
         position.add(velocity);
 
         for (int i = 0; i < temp.size(); i++)
         {
             BlockEntity e = ((BlockEntity) temp.get(i));
             //will not hit original block that fired the bullet
-            if (!e.getName().equals(originBlock) &&e.getBlock().contains(this.getPosition().x, this.getPosition().y))
+            if (!e.getName().equals(originBlock) && e.getBlock().contains(this.getPosition().x, this.getPosition().y))
             {
                 //damage here!
                 //remove bullet from MyEntityManager

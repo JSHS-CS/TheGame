@@ -64,9 +64,9 @@ public class AsteroidsGame extends BasicGame
     {
         container.setMinimumLogicUpdateInterval(25);
 
-        BlockEntity b = new BlockEntity(new Circle(0, 0, 35), "TestBlock2", 1500, 380, 330, +.0f, 0, 1000);
+        BlockEntity b = new BlockEntity(new Circle(0, 0, 350), "TestBlock2", 700, 180, 130, +.0f, 0, 1000);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 25), "TestBlock2", 1000, 100, 100, +.0f, 0, 500);
-        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 10), "TestBlock1", 40, 400, 180, -.22f, .05f, 200);
+        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 10), "TestBlock1", 40, 0, 0, -.22f, .05f, 200);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
         manager.addBlockEntity(a);
         manager.addBlockEntity(b);
@@ -140,6 +140,7 @@ public class AsteroidsGame extends BasicGame
     {
         for (Entity e : manager.getAllEntities())
         {
+            if(e.getPosition().x>-50&&e.getPosition().x<container.getWidth()+50&&e.getPosition().y>-50&&e.getPosition().y<container.getHeight()+50)
             e.render(container, g);
         }
     }
