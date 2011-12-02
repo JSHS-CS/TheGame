@@ -1,0 +1,41 @@
+package net.mrfornal.kbm;
+
+import net.mrfornal.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.mrfornal.game.BasicEntityGame;
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.SlickException;
+
+/**
+ *
+ * @author sfornal
+ */
+public class ProofRunner
+{
+
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 1024;
+    private static final boolean FULL_SCREEN = true;
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args)
+    {
+        final String sep = System.getProperty("file.separator");
+        System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + sep + "resource" + sep + "native");
+        System.setProperty("net.java.games.input.librarypath", System.getProperty("org.lwjgl.librarypath"));
+
+        try
+        {
+            AppGameContainer game = new AppGameContainer(new BasicEntityGame("Test"));
+            game.setDisplayMode(WIDTH, HEIGHT, FULL_SCREEN);
+            game.start();
+        }
+        catch (SlickException ex)
+        {
+            Logger.getLogger(ProofRunner.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}
