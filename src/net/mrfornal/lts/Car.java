@@ -27,11 +27,11 @@ public class Car extends Entity
     public Car(Vector2f position, float rotation) throws SlickException
     {
         super();
-        image = new Image("resource/image/car.png");
+        image = new Image("resource/image/ctsv.png");
         this.position = position;
         this.rotation = rotation;
         velocity = new Vector2f(0,0);
-        acceleration = new Vector2f(.001f,0);
+        acceleration = new Vector2f(.002f,0);
         
     }
     
@@ -72,34 +72,23 @@ public class Car extends Entity
         if (i.isKeyDown(Input.KEY_LEFT))
         {
             rotation -= 0.1f * delta;
+            velocity.scale(0.997f);
             
         }
-        System.out.println(velocity);
-        System.out.println(" = " + acceleration);
-        System.out.println(" * " + position);
         if (i.isKeyDown(Input.KEY_RIGHT))
         { 
             rotation += 0.1f * delta;
+            velocity.scale(0.995f);
         }
         if (i.isKeyDown(Input.KEY_UP))
         {
-            
-//            isAccelerating = true;
-//            acceleration = new Vector2f(rotation);
-//            acceleration.normalise().scale(0.05f * delta);
             velocity.add(acceleration);
         }
         if(i.isKeyDown(Input.KEY_DOWN))
         {
-            velocity.scale(0.99f);
+            velocity.scale(0.995f);
         }
        
-        
-//        if (velocity.length() > 3)
-//        { 
-//            velocity.normalise().scale(3);
-//        }
-        
         position.add(velocity);
         
         if (position.x > container.getWidth())
