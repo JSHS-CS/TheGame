@@ -22,7 +22,6 @@ public class BlockEntity extends Entity
     // G the Universal Gravitational Constant (6.67x10-11 N.m2/kg2), 
     // It is scaled up to increase gravitational attraction
 
-    
     public static final float ugc = (float) (6.67 * Math.pow(10, -3));
     protected Vector2f velocity;
     protected Shape block;
@@ -35,17 +34,17 @@ public class BlockEntity extends Entity
     {
         this(s, name, mass, 0, 0);
     }
-
+    
     public BlockEntity(Shape s, String name, float mass, float x, float y)
     {
         this(s, name, mass, x, y, 0, 0);
     }
-
+    
     public BlockEntity(Shape s, String name, float mass, float x, float y, float vX, float vY)
     {
         this(s, name, mass, x, y, vX, vY, 100);
     }
-
+    
     public BlockEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxHP)
     {
         super(name);
@@ -59,52 +58,57 @@ public class BlockEntity extends Entity
         this.maxHP = maxHP;
         hp = maxHP;
     }
-
+    
+    public void addToManager()
+    {
+        MyEntityManager.getInstance().addBlockEntity(this);
+    }
+    
     public Vector2f getVelocity()
     {
         return velocity;
     }
-
+    
     public void setVelocity(Vector2f velocity)
     {
         this.velocity = velocity;
     }
-
+    
     public Shape getBlock()
     {
         return block;
     }
-
+    
     public void setBlock(Shape block)
     {
         this.block = block;
     }
-
+    
     public float getMass()
     {
         return mass;
     }
-
+    
     public void setMass(float mass)
     {
         this.mass = mass;
     }
-
+    
     public Vector2f getAcceleration()
     {
         return acceleration;
     }
-
+    
     public void setAcceleration(Vector2f acceleration)
     {
         this.acceleration = acceleration;
     }
-
+    
     public void takeDamage(int dmg)
     {
         hp -= dmg;
     }
-
+    
     public void restoreHP(int restore)
     {
         hp += restore;
@@ -113,12 +117,12 @@ public class BlockEntity extends Entity
             hp = maxHP;
         }
     }
-
+    
     public void restoreAllHP()
     {
         hp = maxHP;
     }
-
+    
     public int getHP()
     {
         return hp;
@@ -139,12 +143,12 @@ public class BlockEntity extends Entity
     {
 //        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
         ArrayList<BlockEntity> list = MyEntityManager.getInstance().getBlockEntities();
-
+        
         for (BlockEntity e : list)
         {
             if (!e.equals(this) && e.getMass() > 50)
             {
-
+                
                 float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX();
                 float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
                 float x2 = /*e.getPosition().x + */ e.getBlock().getCenterX();
@@ -156,12 +160,12 @@ public class BlockEntity extends Entity
 //                float accX =  ugc * m2 / (x2 - x1);
 //                float accY =  ugc * m2 / (y2 - y1);
 
-
-
+                
+                
                 float acc = (float) (ugc * m2 / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
-
+                
                 double theta = Math.atan(Math.abs((y2 - y1) / (x2 - x1)));
-
+                
                 float accX = Math.abs(acc * (float) Math.cos(theta));
                 float accY = Math.abs(acc * (float) Math.sin(theta));
 
@@ -175,40 +179,40 @@ public class BlockEntity extends Entity
                 {
                     accY *= -1;
                 }
-
+                
                 acceleration.set(new Vector2f(accX, accY));
                 System.out.println(acceleration.x + " " + acceleration.y);
                 velocity.add(acceleration);
                 //accelerate based on position of other blocks
 
-                
-                
+
+
                 //Collision with another block
                 
                 
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
-                    Vector2f positionCalc = new Vector2f(block.getCenterX(),block.getCenterY());
-                    Vector2f positionCalc2 = new Vector2f(e.getBlock().getCenterX(),e.getBlock().getCenterY());
+                    Vector2f positionCalc = new Vector2f(block.getCenterX(), block.getCenterY());
+                    Vector2f positionCalc2 = new Vector2f(e.getBlock().getCenterX(), e.getBlock().getCenterY());
                     positionCalc.add(positionCalc2);
                     double theta2 = positionCalc.getTheta();
                     double theta1 = velocity.getTheta();
-                    velocity.setTheta(theta1+2*theta2);
+                    velocity.setTheta(theta1 + 2 * theta2);
                 }
-                
+
                 //old collision - just reversed velocity vector
                 /*
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
-                    velocity.set(-velocity.x, -velocity.y);
-                    setPosition(getPosition().add(velocity));
+                velocity.set(-velocity.x, -velocity.y);
+                setPosition(getPosition().add(velocity));
                 }
                  */
-                 
+                
             }
         }
         setPosition(getPosition().add(velocity));
-
+        
         block.setX(getPosition().x);
         block.setY(getPosition().y);
 
@@ -229,24 +233,24 @@ public class BlockEntity extends Entity
         {
             velocity.set(velocity.x, -velocity.y);
         }
-
-
-
+        
+        
+        
     }
-
+    
     @Override
     public void init(GameContainer container) throws SlickException
     {
         //nothing?
     }
-
+    
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
         g.draw(block);
         g.drawString("" + hp, getPosition().x, getPosition().y);
     }
-
+    
     @Override
     public String toString()
     {

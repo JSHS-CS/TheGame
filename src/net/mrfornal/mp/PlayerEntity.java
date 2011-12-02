@@ -32,6 +32,19 @@ public class PlayerEntity extends BlockEntity
     }
 
     @Override
+    public void addToManager()
+    {
+        MyEntityManager.getInstance().addBlockEntity(this);
+    }
+
+    //fires current equipped weapon
+    private void fireWeapon()
+    {
+        Vector2f pos = new Vector2f(block.getCenterX(), block.getCenterY());
+        MyEntityManager.getInstance().addBulletEntity(new BulletEntity(10, velocity, pos, theta, name));
+    }
+
+    @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
         Input i = container.getInput();
@@ -82,10 +95,10 @@ public class PlayerEntity extends BlockEntity
 
 
 
-                
+
                 //Collision with another block
-                
-                
+
+
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
                     Vector2f positionCalc = new Vector2f();
@@ -93,15 +106,15 @@ public class PlayerEntity extends BlockEntity
                     positionCalc.add(e.getPosition());
                     double theta2 = positionCalc.getTheta();
                     double theta1 = velocity.getTheta();
-                    velocity.setTheta(theta1+2*theta2);
+                    velocity.setTheta(theta1 + 2 * theta2);
                 }
-                
+
                 //old collision - just reversed velocity vector
                 /*
                 if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
                 {
-                    velocity.set(-velocity.x, -velocity.y);
-                    setPosition(getPosition().add(velocity));
+                velocity.set(-velocity.x, -velocity.y);
+                setPosition(getPosition().add(velocity));
                 }
                  */
             }
@@ -126,10 +139,11 @@ public class PlayerEntity extends BlockEntity
         }
         if (i.isKeyPressed(Input.KEY_LCONTROL))
         {
-            Vector2f pos=new Vector2f(block.getCenterX(),block.getCenterY());
-            
-            
-            MyEntityManager.getInstance().addBulletEntity(new BulletEntity(10, velocity, pos,theta,name));
+            fireWeapon();
+        }
+        if (i.isKeyDown(Input.KEY_Z)&&i.isKeyDown(Input.KEY_LCONTROL))
+        {
+            fireWeapon();
         }
         System.out.println(direction.toString());
         System.out.println(theta);
