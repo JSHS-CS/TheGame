@@ -16,7 +16,7 @@ import org.newdawn.slick.SlickException;
 
 /**
  *
- * @author sfornal
+ * @author Scott Davis
  */
 public class BasicEntityGame extends BasicGame
 {
