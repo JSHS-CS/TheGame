@@ -34,7 +34,7 @@ public class LogansDemo extends BasicGame
     public void init(GameContainer container) throws SlickException
     {
         
-        eManager.addEntity(new Car(new Vector2f(), 0));
+        eManager.addEntity(new Car(new Vector2f(), 0, 0));
 
         for (Entity e : eManager.getAllEntities())
         {

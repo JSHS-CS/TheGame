@@ -7,7 +7,7 @@ import org.newdawn.slick.SlickException;
 
 /**
  *
- * @author sfornal
+ * @author stone205446
  */
 public class GameRunner
 {

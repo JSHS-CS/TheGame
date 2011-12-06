@@ -22,16 +22,16 @@ public class Car extends Entity
     private Image image;
     private Vector2f velocity;
     private Vector2f acceleration;
-    private Color color;
     
-    public Car(Vector2f position, float rotation) throws SlickException
+    public Car(Vector2f position, float rotation, int layer) throws SlickException
     {
         super();
         image = new Image("resource/image/ctsv.png");
         this.position = position;
         this.rotation = rotation;
+        this.layer = layer;
         velocity = new Vector2f(0,0);
-        acceleration = new Vector2f(.002f,0);
+        acceleration = new Vector2f(.0009f,0);
         
     }
     
@@ -78,19 +78,29 @@ public class Car extends Entity
         if (i.isKeyDown(Input.KEY_RIGHT))
         { 
             rotation += 0.1f * delta;
-            velocity.scale(0.995f);
+            velocity.scale(0.997f);
         }
         if (i.isKeyDown(Input.KEY_UP))
         {
             velocity.add(acceleration);
+            System.out.println(acceleration);
+            System.out.println(velocity);
         }
         if(i.isKeyDown(Input.KEY_DOWN))
         {
             velocity.scale(0.995f);
+            System.out.println(acceleration);
+            System.out.println(velocity);
+        }
+        
+        if(!i.isKeyDown(Input.KEY_LEFT) && !i.isKeyDown(Input.KEY_RIGHT) 
+                && !i.isKeyDown(Input.KEY_UP) && !i.isKeyDown(Input.KEY_DOWN))
+        {
+            velocity.scale(0.999f);
         }
        
         position.add(velocity);
-        
+
         if (position.x > container.getWidth())
         {
             position.x = Math.abs(container.getWidth() - position.x);
@@ -108,7 +118,7 @@ public class Car extends Entity
             position.y = container.getHeight() - Math.abs(position.y);
         }
         
-        velocity.scale(0.999f);
+        
     }
     
     @Override
@@ -118,5 +128,6 @@ public class Car extends Entity
         float x = position.x - image.getWidth();
         float y = position.y - image.getHeight();
         image.draw(x, y, 1);
+        g.drawString(velocity.toString(), position.x , position.y + image.getHeight() / 2 + 10);
     }   
 }
