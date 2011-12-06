@@ -22,6 +22,7 @@ public class Car extends Entity
     private Image image;
     private Vector2f velocity;
     private Vector2f acceleration;
+    private boolean debugging;
     
     public Car(Vector2f position, float rotation, int layer) throws SlickException
     {
@@ -30,6 +31,7 @@ public class Car extends Entity
         this.position = position;
         this.rotation = rotation;
         this.layer = layer;
+        debugging = false;
         velocity = new Vector2f(0,0);
         acceleration = new Vector2f(.0009f,0);
         
@@ -72,8 +74,7 @@ public class Car extends Entity
         if (i.isKeyDown(Input.KEY_LEFT))
         {
             rotation -= 0.1f * delta;
-            velocity.scale(0.997f);
-            
+            velocity.scale(0.997f);            
         }
         if (i.isKeyDown(Input.KEY_RIGHT))
         { 
@@ -83,14 +84,10 @@ public class Car extends Entity
         if (i.isKeyDown(Input.KEY_UP))
         {
             velocity.add(acceleration);
-            System.out.println(acceleration);
-            System.out.println(velocity);
         }
         if(i.isKeyDown(Input.KEY_DOWN))
         {
             velocity.scale(0.995f);
-            System.out.println(acceleration);
-            System.out.println(velocity);
         }
         
         if(!i.isKeyDown(Input.KEY_LEFT) && !i.isKeyDown(Input.KEY_RIGHT) 
@@ -118,7 +115,14 @@ public class Car extends Entity
             position.y = container.getHeight() - Math.abs(position.y);
         }
         
-        
+        //debugging
+        if(i.isKeyPressed(Input.KEY_Q))
+        {
+            if(debugging == false)
+                debugging = true;
+            else if(debugging == true)
+                debugging = false;
+        }
     }
     
     @Override
@@ -128,6 +132,14 @@ public class Car extends Entity
         float x = position.x - image.getWidth();
         float y = position.y - image.getHeight();
         image.draw(x, y, 1);
-        g.drawString(velocity.toString(), position.x , position.y + image.getHeight() / 2 + 10);
+        
+        
+        //Debugging
+        if(debugging == true)
+        {
+            g.drawString("Position " + position.toString(), 100 , 0);
+            g.drawString("Velocity " + velocity.toString(), 100 , 20);
+            g.drawString("Acceleration " + acceleration.toString(), 100 , 40);         
+        }
     }   
 }
