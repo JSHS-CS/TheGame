@@ -18,8 +18,8 @@ import org.newdawn.slick.geom.Vector2f;
 public class BulletEntity extends Entity
 {
 
-    private float initSpeed; //TODO: Make unique bullet speeds - NOT IMPLEMENTED
-    private int damage; //TODO: Put in a static class that handles bullet types and their assigned damage values (HashMap)
+    private float initSpeed; //not actually given a value; used to hold data in stock bullets
+    private int damage; //TODO: Put in a static class that handles bullet types and their assigned damage values (TreeMap)
     private Vector2f velocity;
     private String originBlock;
     
@@ -28,18 +28,17 @@ public class BulletEntity extends Entity
         super("bullet");
     }
 
-    public BulletEntity(int dmg, Vector2f v, Vector2f pos, double theta, String origin)
+    public BulletEntity(float initS, int dmg, Vector2f v, Vector2f pos, double theta, String origin, float initDistance)
     {
         super("bullet");
         velocity = new Vector2f();
         damage = dmg;
-        //initSpeed is a 100 at default - TODO: implement initSpeed
         velocity.set(v);
-        Vector2f temp = new Vector2f(.5f/*initSpeed*/, 0);
+        Vector2f temp = new Vector2f(initS, 0);
         temp.setTheta(theta);
         velocity.add(temp); //boost in speed for bullet to fire
 
-        Vector2f newPos = new Vector2f(10,0); //10 pixel radius of bullet firing
+        Vector2f newPos = new Vector2f(initDistance,0); //pixel radius of bullet firing
         newPos.setTheta(theta);
         setPosition(pos.add(newPos)); //boost in position so bullet travels past player block
         originBlock = origin; //the name of the block the bullet spawned from
@@ -57,7 +56,7 @@ public class BulletEntity extends Entity
         ArrayList<BulletEntity> temp2 = MyEntityManager.getInstance().getBulletEntities();
 
         int index = 0;
-
+        //TODO: Seems like a really inefficient way to get the bullet's index -pham266693
         for (int i = 0; i < temp2.size(); i++)
         {
             if (temp2.get(i).equals(this))
@@ -97,7 +96,6 @@ public class BulletEntity extends Entity
                 }
             }
         }
-
     }
 
     @Override

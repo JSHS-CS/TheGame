@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import net.mrfornal.entity.Entity;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
@@ -23,12 +24,14 @@ public class PlayerEntity extends BlockEntity
     //governs what direction input will cause to accelerate
     private double theta;
     private Vector2f direction;
+    private Image accelerationSprite;
 
-    public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp)
+    public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp, Image spr, Image aSpr)
     {
-        super(s, name, mass, x, y, vX, vY, maxhp);
+        super(s, name, mass, x, y, vX, vY, maxhp, spr);
         direction = new Vector2f(.003f, 0); //default acceleration
         direction.setTheta(theta);
+        accelerationSprite = aSpr;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class PlayerEntity extends BlockEntity
     private void fireWeapon()
     {
         Vector2f pos = new Vector2f(block.getCenterX(), block.getCenterY());
-        MyEntityManager.getInstance().addBulletEntity(new BulletEntity(10, velocity, pos, theta, name));
+        MyEntityManager.getInstance().addBulletEntity(new BulletEntity(1.0f, 10, velocity, pos, theta, name, block.getWidth() / 2));
     }
 
     @Override
@@ -99,14 +102,22 @@ public class PlayerEntity extends BlockEntity
                 //Collision with another block
 
 
-                if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
+                if (this.getBlock().intersects(e.getBlock()))
                 {
                     Vector2f positionCalc = new Vector2f();
-                    positionCalc.set(position);
-                    positionCalc.add(e.getPosition());
-                    double theta2 = positionCalc.getTheta();
+
+                    //theta in direction of other circle
+                    positionCalc.set(new Vector2f(e.getBlock().getCenterX(), e.getBlock().getCenterY()));
+                    positionCalc.sub(new Vector2f(block.getCenterX(), block.getCenterY()));
+
+                    //calculation
                     double theta1 = velocity.getTheta();
-                    velocity.setTheta(theta1 + 2 * theta2);
+                    double theta2 = positionCalc.getTheta() + 180;
+                    double theta3 = theta2 - theta1;
+                    velocity.setTheta(theta1 + theta3);
+
+                    //boost so it doesn't stick
+                    position.add(velocity);
                 }
 
                 //old collision - just reversed velocity vector
@@ -121,6 +132,10 @@ public class PlayerEntity extends BlockEntity
         }
 
         direction.setTheta(theta);
+        
+        sprite.setRotation((float)theta);
+        accelerationSprite.setRotation((float)theta);
+        
         if (i.isKeyDown(Input.KEY_W))
         {
             velocity.add(direction);
@@ -141,7 +156,7 @@ public class PlayerEntity extends BlockEntity
         {
             fireWeapon();
         }
-        if (i.isKeyDown(Input.KEY_Z)&&i.isKeyDown(Input.KEY_LCONTROL))
+        if (i.isKeyDown(Input.KEY_Z) && i.isKeyDown(Input.KEY_LCONTROL))
         {
             fireWeapon();
         }
@@ -156,11 +171,11 @@ public class PlayerEntity extends BlockEntity
 
 
         //prevents from leaving screen
-        if (container.getWidth() + 50 < position.x)
+        if (container.getWidth() + 50 < block.getMaxX())
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (container.getHeight() + 50 < position.y)
+        if (container.getHeight() + 50 < block.getMaxY())
         {
             velocity.set(velocity.x, -velocity.y);
         }
@@ -172,9 +187,6 @@ public class PlayerEntity extends BlockEntity
         {
             velocity.set(velocity.x, -velocity.y);
         }
-
-
-
     }
 
     @Override
@@ -189,15 +201,26 @@ public class PlayerEntity extends BlockEntity
         g.draw(block);
         g.drawString("" + hp, getPosition().x, getPosition().y);
 
+        if (container.getInput().isKeyDown(Input.KEY_W))
+        {
+            g.drawImage(accelerationSprite, position.x, position.y);
+        } else
+        {
+            g.drawImage(sprite, position.x, position.y);
+        }
+
+
         //draws a line that represents velocity vector
 //        g.drawLine(block.getCenterX(),
 //                block.getCenterY(),
 //                (float) 200 * velocity.x + block.getCenterX(),
 //                (float) 200 * velocity.y + block.getCenterY());
+
+
         //draws a line that represents player direction
-        g.drawLine(block.getCenterX(),
-                block.getCenterY(),
-                (float) 30000 * direction.x + block.getCenterX(),
-                (float) 30000 * direction.y + block.getCenterY());
+//        g.drawLine(block.getCenterX(),
+//                block.getCenterY(),
+//                (float) 30000 * direction.x + block.getCenterX(),
+//                (float) 30000 * direction.y + block.getCenterY());
     }
 }

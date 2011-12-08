@@ -7,19 +7,15 @@ package net.mrfornal.mp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.mrfornal.TheGame;
-import net.mrfornal.game.*;
-import org.newdawn.slick.Color;
-import net.mrfornal.entity.BasicTestEntity;
 import net.mrfornal.entity.Entity;
-import net.mrfornal.entity.EntityManager;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Rectangle;
 
 /**
  *
@@ -63,14 +59,18 @@ public class AsteroidsGame extends BasicGame
     public void init(GameContainer container) throws SlickException
     {
         container.setMinimumLogicUpdateInterval(25);
+        
+        Image img1 =new Image("resource/image/mp1.png");
+        Image img2 =new Image("resource/image/mp1a.png");
+        
 
-        BlockEntity b = new BlockEntity(new Circle(0, 0, 350), "TestBlock2", 700, 180, 130, +.0f, 0, 1000);
+        BlockEntity b = new BlockEntity(new Circle(0, 0, 150), "TestBlock2", 700, 180, 130, +.0f, 0, 1000,null);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 25), "TestBlock2", 1000, 100, 100, +.0f, 0, 500);
-        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 10), "TestBlock1", 40, 0, 0, -.22f, .05f, 200);
+        PlayerEntity a = new PlayerEntity(new Circle(0, 0, 50), "TestBlock1", 40, 0, 0, -.22f, .05f, 200,img1,img2);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
+        //manager.addBlockEntity(c);
         manager.addBlockEntity(a);
         manager.addBlockEntity(b);
-        //manager.addBlockEntity(c);
     }
 
     @Override
@@ -138,10 +138,27 @@ public class AsteroidsGame extends BasicGame
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
+        Entity center = null;
+        for (Entity e : manager.getBlockEntities())
+        {
+            if (e.getName().equals("TestBlock1"))
+            {
+                center = e;
+            }
+        }
+        g.translate(container.getWidth()/2-((BlockEntity) center).getBlock().getCenterX(), container.getHeight()/2-((BlockEntity) center).getBlock().getCenterY());
         for (Entity e : manager.getAllEntities())
         {
-            if(e.getPosition().x>-50&&e.getPosition().x<container.getWidth()+50&&e.getPosition().y>-50&&e.getPosition().y<container.getHeight()+50)
-            e.render(container, g);
+            if (e.getPosition().x > -50 && e.getPosition().x < container.getWidth() + 50 && e.getPosition().y > -50 && e.getPosition().y < container.getHeight() + 50)
+            {
+                e.render(container, g);
+            }
+            if (e.getName().equals("TestBlock1"))
+            {
+                center = e;
+            }
         }
+        g.drawRect(-50, -50, container.getWidth()+100, container.getHeight()+100);
+ 
     }
 }

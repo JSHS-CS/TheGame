@@ -2,6 +2,7 @@ package net.mrfornal.mp;
 
 import net.mrfornal.entity.*;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * This singleton class manages all the entities in the game.
@@ -14,9 +15,11 @@ public class MyEntityManager
 {
     //A collection of some sort - uses ArrayList here
 
-    private ArrayList<Entity> entities;
-    private ArrayList<BlockEntity> blockEntities;
-    private ArrayList<BulletEntity> bulletEntities;
+    private ArrayList<Entity> entities; //contains miscellaneous entities
+    private ArrayList<BlockEntity> blockEntities; //contains anything with a shape that isn't bullet
+    private ArrayList<BulletEntity> bulletEntities; //contains bullets that do damage and disappear on contact
+    
+    private TreeMap<String, BulletEntity> bulletDefaults; //contains stock bullet definitions to be copied into existence
     //singleton instance
     private static MyEntityManager instance;
 
