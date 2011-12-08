@@ -23,6 +23,7 @@ public class Car extends Entity
     private Vector2f velocity;
     private Vector2f acceleration;
     private boolean debugging;
+    private float MAX_SPEED = 0.7f;
     
     public Car(Vector2f position, float rotation, int layer) throws SlickException
     {
@@ -71,31 +72,45 @@ public class Car extends Entity
         
         acceleration.setTheta(rotation);
         
-        if (i.isKeyDown(Input.KEY_LEFT))
+        if(velocity.length() < MAX_SPEED)
         {
-            rotation -= 0.1f * delta;
-            velocity.scale(0.997f);            
+            if (i.isKeyDown(Input.KEY_LEFT))
+            {
+                rotation -= 0.1f * delta;
+                velocity.scale(0.997f);
+                image = new Image("resource/image/ctsv.png");
+            }
+            if (i.isKeyDown(Input.KEY_RIGHT))
+            { 
+                rotation += 0.1f * delta;
+                velocity.scale(0.997f);
+                image = new Image("resource/image/ctsv.png");
+            }
+            if(i.isKeyDown(Input.KEY_DOWN))
+            {
+                velocity.scale(0.995f);
+                image = new Image("resource/image/ctsv.png");
+            }
+            if (i.isKeyDown(Input.KEY_UP))
+            {
+                velocity.add(acceleration);
+                image = new Image("resource/image/ctsv-flame.png");
+            }
+
+            if(!i.isKeyDown(Input.KEY_LEFT) && !i.isKeyDown(Input.KEY_RIGHT) 
+                    && !i.isKeyDown(Input.KEY_UP) && !i.isKeyDown(Input.KEY_DOWN))
+            {
+                velocity.scale(0.999f);
+                image = new Image("resource/image/ctsv.png");
+            }   
         }
-        if (i.isKeyDown(Input.KEY_RIGHT))
-        { 
-            rotation += 0.1f * delta;
-            velocity.scale(0.997f);
-        }
-        if (i.isKeyDown(Input.KEY_UP))
+        else
         {
-            velocity.add(acceleration);
-        }
-        if(i.isKeyDown(Input.KEY_DOWN))
-        {
-            velocity.scale(0.995f);
+            velocity.scale(MAX_SPEED);
         }
         
-        if(!i.isKeyDown(Input.KEY_LEFT) && !i.isKeyDown(Input.KEY_RIGHT) 
-                && !i.isKeyDown(Input.KEY_UP) && !i.isKeyDown(Input.KEY_DOWN))
-        {
-            velocity.scale(0.999f);
-        }
-       
+        
+        
         position.add(velocity);
 
         if (position.x > container.getWidth())
@@ -115,6 +130,7 @@ public class Car extends Entity
             position.y = container.getHeight() - Math.abs(position.y);
         }
         
+        
         //debugging
         if(i.isKeyPressed(Input.KEY_Q))
         {
@@ -131,8 +147,7 @@ public class Car extends Entity
         image.setRotation(rotation);
         float x = position.x - image.getWidth();
         float y = position.y - image.getHeight();
-        image.draw(x, y, 1);
-        
+        image.draw(x, y, 1);   
         
         //Debugging
         if(debugging == true)
