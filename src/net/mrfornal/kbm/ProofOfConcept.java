@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package net.mrfornal.ScottieD;
-
-import net.mrfornal.game.*;
+package net.mrfornal.kbm;
 import org.newdawn.slick.Color;
+import net.mrfornal.entity.BasicTestEntity;
 import net.mrfornal.entity.Entity;
 import net.mrfornal.entity.EntityManager;
 import org.newdawn.slick.BasicGame;
@@ -16,14 +11,13 @@ import org.newdawn.slick.SlickException;
 
 /**
  *
- * @author Scott Davis
+ * @author mitch314032
  */
-public class BasicEntityGame extends BasicGame
+public class ProofOfConcept extends Entity
 {
-
     private EntityManager manager;
-    private EntityScott k;
-    public BasicEntityGame(String title)
+
+    public ProofOfConcept(String title)
     {
         super(title);
         manager = EntityManager.getInstance();
@@ -32,15 +26,18 @@ public class BasicEntityGame extends BasicGame
     @Override
     public void init(GameContainer container) throws SlickException
     {
-        
-        
-            float rot = 90;
+        for (int i = 0; i < 100; i++)
+        {
+            float rot = (float) (Math.random() * 360);
             float x = (float) (Math.random() * container.getWidth());
             float y = (float) (Math.random() * container.getHeight());
-            Color col = Color.white;
 
-            k = new EntityScott(x, y, rot, col);
-            manager.addEntity(k);
+            Color col = (Math.random() < 0.02) ? Color.white : Color.yellow;
+
+            BasicTestEntity e = new BasicTestEntity(x, y, rot, col);
+            manager.addEntity(e);
+        }
+        
         
 
         for (Entity e : manager.getAllEntities())
@@ -53,21 +50,12 @@ public class BasicEntityGame extends BasicGame
     public void update(GameContainer container, int delta) throws SlickException
     {
         Input i = container.getInput();
-        container.setMinimumLogicUpdateInterval(5);
 
         if (i.isKeyPressed(Input.KEY_ESCAPE))
         {
             container.exit();
         }
-        if(i.isKeyDown(Input.KEY_RIGHT))
-        {
-            k.setRotation((k.getRotation()+(float)(.5)));
-        }
-        if(i.isKeyDown(Input.KEY_LEFT))
-        {
-            k.setRotation((k.getRotation()-(float)(.5)));
-        }
-        
+
         for (Entity e : manager.getAllEntities())
         {
             e.update(container, delta);

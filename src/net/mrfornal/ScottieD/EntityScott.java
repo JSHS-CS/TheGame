@@ -4,13 +4,14 @@ import net.mrfornal.entity.*;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
  *
- * @author sfornal
+ * @author Scott Davis
  */
 public class EntityScott extends Entity
 {
@@ -31,7 +32,7 @@ public class EntityScott extends Entity
         setPosition(new Vector2f(xPos, yPos));
         setLayer(LAYER);
         setRotation(rotation);
-        velocity = new Vector2f(0);
+        velocity = new Vector2f();
         color = col;
     }
 
@@ -44,6 +45,7 @@ public class EntityScott extends Entity
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
+        Input i = container.getInput();
         velocity = new Vector2f(getRotation());
         position.add(velocity);
         
@@ -52,6 +54,11 @@ public class EntityScott extends Entity
         
         if (position.x < 0) position.x += container.getWidth();
         if (position.y < 0) position.y += container.getHeight();
+        if(i.isKeyDown(Input.KEY_DOWN))
+        {
+            velocity.scale(0.2f);
+        }
+       
 
     }
 
@@ -63,7 +70,7 @@ public class EntityScott extends Entity
     @Override
     public void init(GameContainer container) throws SlickException
     {
-        velocity = new Vector2f(0);
+        //velocity = new Vector2f(0);
         //velocity.normalise().scale(((float)(Math.random()*.1)));
     }
 

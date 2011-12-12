@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.mrfornal.lts;
 
 import net.mrfornal.entity.Entity;
@@ -19,20 +15,24 @@ import org.newdawn.slick.geom.Vector2f;
  */
 public class Car extends Entity
 {
-    private Image image;
+    private Image car;
+    private Image track;
     private Vector2f velocity;
     private Vector2f acceleration;
-    private Color color;
+    private boolean debugging;
+    private float MAX_SPEED = 0.7f;
     
-    public Car(Vector2f position, float rotation) throws SlickException
+    public Car(Vector2f position, float rotation, int layer) throws SlickException
     {
         super();
-        image = new Image("resource/image/ctsv.png");
+        car = new Image("resource/image/ctsv.png");
+        track = new Image("resource/image/race-track.png");
         this.position = position;
         this.rotation = rotation;
+        this.layer = layer;
+        debugging = false;
         velocity = new Vector2f(0,0);
-        acceleration = new Vector2f(.002f,0);
-        
+        acceleration = new Vector2f(.0009f,0);      
     }
     
     public void setVelocity(Vector2f velocity)
@@ -69,28 +69,53 @@ public class Car extends Entity
         
         acceleration.setTheta(rotation);
         
-        if (i.isKeyDown(Input.KEY_LEFT))
+        //prevent car from going over the MAX_SPEED
+        if(velocity.length() < MAX_SPEED)
         {
-            rotation -= 0.1f * delta;
-            velocity.scale(0.997f);
+            if (i.isKeyDown(Input.KEY_LEFT))
+            {
+                rotation -= 0.1f * delta;
+                velocity.scale(0.997f);
+                velocity.scale(0.999f);
+                car = new Image("resource/image/ctsv.png");
+            }
+            if (i.isKeyDown(Input.KEY_RIGHT))
+            { 
+                rotation += 0.1f * delta;
+                velocity.scale(0.997f);
+                velocity.scale(0.999f);
+                car = new Image("resource/image/ctsv.png");
+            }
+            if(i.isKeyDown(Input.KEY_DOWN))
+            {
+                velocity.scale(0.995f);
+                velocity.scale(0.999f);
+                car = new Image("resource/image/ctsv.png");
+            }
             
-        }
-        if (i.isKeyDown(Input.KEY_RIGHT))
-        { 
-            rotation += 0.1f * delta;
-            velocity.scale(0.995f);
-        }
-        if (i.isKeyDown(Input.KEY_UP))
+            //add acceleration to the velocity vector to go
+            if (i.isKeyDown(Input.KEY_UP))
+            {
+                velocity.add(acceleration);
+                velocity.scale(0.999f);
+                car = new Image("resource/image/ctsv-flame.png");
+            }
+            
+            //friction will slow the car down
+            if(!i.isKeyDown(Input.KEY_LEFT) && !i.isKeyDown(Input.KEY_RIGHT) 
+                    && !i.isKeyDown(Input.KEY_UP) && !i.isKeyDown(Input.KEY_DOWN))
+            {
+                velocity.scale(0.999f);
+                car = new Image("resource/image/ctsv.png");
+            }   
+        }       
+        else
         {
-            velocity.add(acceleration);
+            velocity.scale(MAX_SPEED);
         }
-        if(i.isKeyDown(Input.KEY_DOWN))
-        {
-            velocity.scale(0.995f);
-        }
-       
-        position.add(velocity);
         
+        position.add(velocity);
+
         if (position.x > container.getWidth())
         {
             position.x = Math.abs(container.getWidth() - position.x);
@@ -108,15 +133,32 @@ public class Car extends Entity
             position.y = container.getHeight() - Math.abs(position.y);
         }
         
-        velocity.scale(0.999f);
+        
+        //debugging
+        if(i.isKeyPressed(Input.KEY_Q))
+        {
+            if(debugging == false)
+                debugging = true;
+            else if(debugging == true)
+                debugging = false;
+        }
     }
     
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        image.setRotation(rotation);
-        float x = position.x - image.getWidth();
-        float y = position.y - image.getHeight();
-        image.draw(x, y, 1);
+        car.setRotation(rotation);
+        float x = position.x - car.getWidth();
+        float y = position.y - car.getHeight();
+        track.draw(0,0,1);
+        car.draw(x, y, 1);
+        
+        //debugging
+        if(debugging == true)
+        {
+            g.drawString("Position " + position.toString(), 100 , 0);
+            g.drawString("Velocity " + velocity.toString(), 100 , 20);
+            g.drawString("Acceleration " + acceleration.toString(), 100 , 40);         
+        }
     }   
 }

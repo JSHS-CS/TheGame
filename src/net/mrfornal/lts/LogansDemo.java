@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package net.mrfornal.lts;
 
 import net.mrfornal.game.*;
@@ -34,7 +30,7 @@ public class LogansDemo extends BasicGame
     public void init(GameContainer container) throws SlickException
     {
         
-        eManager.addEntity(new Car(new Vector2f(), 0));
+        eManager.addEntity(new Car(new Vector2f(), 0, 0));
 
         for (Entity e : eManager.getAllEntities())
         {
