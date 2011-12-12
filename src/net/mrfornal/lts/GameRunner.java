@@ -16,9 +16,6 @@ public class GameRunner
     private static final int HEIGHT = 600;
     private static final boolean FULL_SCREEN = false;
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args)
     {
         final String sep = System.getProperty("file.separator");
