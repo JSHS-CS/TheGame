@@ -152,18 +152,16 @@ public class BlockEntity extends Entity
             if (!e.equals(this) && e.getMass() > 50)
             {
 
-                float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX();
+                float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX(); //turns out getCenter gives you the absolute position
                 float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
                 float x2 = /*e.getPosition().x + */ e.getBlock().getCenterX();
                 float y2 = /*e.getPosition().y + */ e.getBlock().getCenterY();
                 float m2 = e.getMass();
 
-                //old acceleration - x and y - messed up when both objects were near each other
+                //old acceleration - x and y - messed up when both objects were near each other. Needed more refinement.
 
 //                float accX =  ugc * m2 / (x2 - x1);
 //                float accY =  ugc * m2 / (y2 - y1);
-
-
 
                 float acc = (float) (ugc * m2 / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
 
@@ -188,29 +186,8 @@ public class BlockEntity extends Entity
                 velocity.add(acceleration);
                 //accelerate based on position of other blocks
 
-
-
                 //Collision with another block
-
-
-                if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
-                {
-                    Vector2f positionCalc = new Vector2f(block.getCenterX(), block.getCenterY());
-                    Vector2f positionCalc2 = new Vector2f(e.getBlock().getCenterX(), e.getBlock().getCenterY());
-                    positionCalc.add(positionCalc2);
-                    double theta2 = positionCalc.getTheta();
-                    double theta1 = velocity.getTheta();
-                    velocity.setTheta(theta1 + 2 * theta2);
-                }
-
-                //old collision - just reversed velocity vector
-                /*
-                if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
-                {
-                velocity.set(-velocity.x, -velocity.y);
-                setPosition(getPosition().add(velocity));
-                }
-                 */
+                collide(e);
 
             }
         }
@@ -220,6 +197,77 @@ public class BlockEntity extends Entity
         block.setY(getPosition().y);
 
         //prevents from leaving screen
+
+    }
+
+    public void collide(BlockEntity other)
+    {
+        if (this.getBlock().intersects((other.getBlock())))
+        {
+            //Step 1
+            Vector2f normal = new Vector2f();
+            normal.set(other.position);
+            normal.sub(position);
+
+            Vector2f unitNormal = new Vector2f(
+                    normal.x / (float) Math.sqrt(Math.pow(normal.x, 2) + Math.pow(normal.y, 2)),
+                    normal.y / (float) Math.sqrt(Math.pow(normal.x, 2) + Math.pow(normal.y, 2)));
+
+            Vector2f unitTangent = new Vector2f(-unitNormal.y, unitNormal.x);
+
+            //Step 2
+            Vector2f v1n = new Vector2f(), v1t = new Vector2f(), v2n = new Vector2f(), v2t = new Vector2f();
+            v1n.set(unitNormal);
+            v1t.set(unitTangent);
+            v2n.set(unitNormal);
+            v2t.set(unitTangent);
+
+            
+            //Step 3
+            v1n.dot(velocity);
+            v1t.dot(velocity);
+            v2n.dot(other.velocity);
+            v2t.dot(other.velocity);
+            
+            //n at the end means new
+            Vector2f v1tn = v1t.copy(), v2tn =v2t.copy();
+            Vector2f v1nn = new Vector2f(), v2nn = new Vector2f();
+            
+            //Step 4
+            v1tn.set(v1t);
+            v2tn.set(v2t);
+
+            //Step 5
+            
+            
+            
+            
+        }
+
+        //old, imperfect collision
+        /*
+        if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
+        {
+        Vector2f positionCalc = new Vector2f(block.getCenterX(), block.getCenterY());
+        Vector2f positionCalc2 = new Vector2f(e.getBlock().getCenterX(), e.getBlock().getCenterY());
+        positionCalc.add(positionCalc2);
+        double theta2 = positionCalc.getTheta();
+        double theta1 = velocity.getTheta();
+        velocity.setTheta(theta1 + 2 * theta2);
+        }
+         */
+        //old collision - just reversed velocity vector
+        /*
+        if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
+        {
+        velocity.set(-velocity.x, -velocity.y);
+        setPosition(getPosition().add(velocity));
+        }
+         */
+    }
+
+    public void edgeCollide(GameContainer container)
+    {
         if (container.getWidth() + 50 < block.getMaxX())
         {
             velocity.set(-velocity.x, velocity.y);
@@ -236,9 +284,6 @@ public class BlockEntity extends Entity
         {
             velocity.set(velocity.x, -velocity.y);
         }
-
-
-
     }
 
     @Override

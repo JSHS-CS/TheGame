@@ -22,7 +22,8 @@ public class BulletEntity extends Entity
     private int damage; //TODO: Put in a static class that handles bullet types and their assigned damage values (TreeMap)
     private Vector2f velocity;
     private String originBlock;
-    
+    public boolean deadBullet = false; //if true, remove from game
+
     public BulletEntity()
     {
         super("bullet");
@@ -38,7 +39,7 @@ public class BulletEntity extends Entity
         temp.setTheta(theta);
         velocity.add(temp); //boost in speed for bullet to fire
 
-        Vector2f newPos = new Vector2f(initDistance,0); //pixel radius of bullet firing
+        Vector2f newPos = new Vector2f(initDistance, 0); //pixel radius of bullet firing
         newPos.setTheta(theta);
         setPosition(pos.add(newPos)); //boost in position so bullet travels past player block
         originBlock = origin; //the name of the block the bullet spawned from
@@ -55,24 +56,26 @@ public class BulletEntity extends Entity
         ArrayList<BlockEntity> temp = MyEntityManager.getInstance().getBlockEntities();
         ArrayList<BulletEntity> temp2 = MyEntityManager.getInstance().getBulletEntities();
 
+        /*
         int index = 0;
-        //TODO: Seems like a really inefficient way to get the bullet's index -pham266693
+        //DONE: Seems like a really inefficient way to get the bullet's index -pham266693
         for (int i = 0; i < temp2.size(); i++)
         {
-            if (temp2.get(i).equals(this))
-            {
-                index = i;
-            }
+        if (temp2.get(i).equals(this))
+        {
+        index = i;
         }
+        }
+         */
 
-        //removes if off screen
+        //removes if off screen - will be cleaned up by MyEntityManager
         if (container.getWidth() + 50 < position.x || container.getHeight() + 50 < position.y)
         {
-            temp2.remove(index);
+            deadBullet = true;
         }
         if (-50 > position.x || -50 > position.y)
         {
-            temp2.remove(index);
+            deadBullet = true;
         }
 
         position.add(velocity);
@@ -85,8 +88,8 @@ public class BulletEntity extends Entity
             {
                 //damage here!
                 //remove bullet from MyEntityManager
-                //TODO: Make damage/removal better!
-                temp2.remove(index);
+                //TODO: Make damage better!
+                deadBullet = true;
                 e.takeDamage(this.damage);
 
                 //destroy BlockEntity if below 0 hp

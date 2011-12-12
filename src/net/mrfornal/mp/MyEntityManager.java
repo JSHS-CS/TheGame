@@ -111,6 +111,12 @@ public class MyEntityManager
 
     public ArrayList<BulletEntity> getBulletEntities()
     {
+        for (int i = 0; i < bulletEntities.size(); i++)
+        {
+            BulletEntity e = bulletEntities.get(i);
+            if(e.deadBullet)
+                bulletEntities.remove(i);
+        }
         return bulletEntities;
     }
 
