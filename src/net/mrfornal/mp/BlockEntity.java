@@ -204,186 +204,56 @@ public class BlockEntity extends Entity
     {
         if (this.getBlock().intersects((other.getBlock())))
         {
-            
+            Vector2f center = new Vector2f(this.getBlock().getCenterX(), this.getBlock().getCenterY());
+            Vector2f otherCenter = new Vector2f(other.getBlock().getCenterX(), other.getBlock().getCenterY());
+
             //final collision model - gave up, used wikipedia's model for 2d collision in C#.
-            
-            Vector2f Dn = this.position.copy().sub(other.position);
- 
-        // The distance between the balls
-        float delta = Dn.Length();
- 
-        // The normal vector of the collision plane
-        Dn.Normalize();
- 
-        // The tangential vector of the collision plane
-        Vector2f Dt = new Vector2f(Dn.Y, -Dn.X);
- 
-        // avoid division by zero
-        if (delta == 0)
-        {
-            ball.Center += new Vector2f(0.01f,0);
-            return;
-        }
- 
-        //the masses of the two balls
-        float m1 = this.Mass;
-        float m2 = ball.Mass;
-        float M = m1 + m2;
- 
-        // minimum translation distance to push balls apart after intersecting
-        Vector2f mT = Dn * ((this.radius + ball.Radius - delta));
- 
-        // push the balls apart proportional to their mass
-        this.Center = this.Center + (mT * m2/M);
-        ball.Center = ball.Center - (mT * m1/M);
- 
-        // the velocity vectors of the balls before the collision
-        Vector2f v1 = this.velocity;
-        Vector2f v2 = ball.velocity;
- 
-        // split the velocity vector of the first ball into a normal and a tangential component in respect of the collision plane
-        Vector2f v1n = Dn * Vector2f.Dot(v1, Dn);
-        Vector2f v1t = Dt * Vector2f.Dot(v1, Dt);
- 
-        // split the velocity vector of the second ball into a normal and a tangential component in respect of the collision plane
-        Vector2f v2n = Dn * Vector2f.Dot(v2, Dn);
-        Vector2f v2t = Dt * Vector2f.Dot(v2, Dt);
- 
-        // calculate new velocity vectors of the balls, the tangential component stays the same, the normal component changes analog to the 1-Dimensional case
-        this.Velocity = v1t + Dn * ((m1 - m2) / M * v1n.Length() + 2 * m2 / M * v2n.Length());
-        ball.velocity = v2t - Dn * ((m2 - m1) / M * v2n.Length() + 2 * m1 / M * v1n.Length());
-            
-            
-            
-            
-            
-            
-            
-            
-            //newer, still imperfect collision
-        /*
-            
-            
-            Vector2ff positionCalc = new Vector2ff();
-            
-            //theta in direction of other circle
-            positionCalc.set(new Vector2ff(other.getBlock().getCenterX(), other.getBlock().getCenterY()));
-            positionCalc.sub(new Vector2ff(block.getCenterX(), block.getCenterY()));
-            
-            //calculation
-            double theta1 = velocity.getTheta();
-            double theta2 = positionCalc.getTheta();
-            
-            double theta3 = (velocity.getTheta()-positionCalc.getTheta())/3;
-            
-            velocity.setTheta(theta1 + theta3);
-            
-            //boost so it doesn't stick
-             * 
-            position.add(velocity);
-             * 
-             */
-            //new Collision - broken :(
-            /*
-            //Step 1
-            Vector2ff normal = new Vector2ff();
-            normal.set(other.position);
-            normal.sub(position);
-            
-            Vector2ff unitNormal = new Vector2ff(
-            normal.x / (float) Math.sqrt(Math.pow(normal.x, 2) + Math.pow(normal.y, 2)),
-            normal.y / (float) Math.sqrt(Math.pow(normal.x, 2) + Math.pow(normal.y, 2)));
-            
-            Vector2ff unitTangent = new Vector2ff(-unitNormal.y, unitNormal.x);
-            
-            //Step 2
-            Vector2ff v1n = new Vector2ff(), v1t = new Vector2ff(), v2n = new Vector2ff(), v2t = new Vector2ff();
-            v1n.set(unitNormal);
-            v1t.set(unitTangent);
-            v2n.set(unitNormal);
-            v2t.set(unitTangent);
-            
-            
-            //Step 3
-            v1n.dot(velocity);
-            v1t.dot(velocity);
-            v2n.dot(other.velocity);
-            v2t.dot(other.velocity);
-            //n notation for new
-            Vector2ff v1tn = v1t.copy(), v2tn = v2t.copy();
-            Vector2ff v1nn = new Vector2ff(), v2nn = new Vector2ff();
-            
-            //Step 4
-            v1tn.set(v1t);
-            v2tn.set(v2t);
-            
-            //Step 5
-            float m1 = this.getMass();
-            float m2 = other.getMass();
-            
-            Vector2ff v1nCalc = new Vector2ff(v1n.getX() * (m1 - m2), v1n.getY() * (m1 - m2));
-            Vector2ff v1nCalc2 = new Vector2ff(v2n.getX() * (2 * m2), v2n.getY() * (2 * m2));
-            v1nCalc.add(v1nCalc2); //does not conflict with pointers
-            v1nCalc2 = new Vector2ff(v1nCalc.getX() / (m1 + m2), v1nCalc.getY() / (m1 + m2));
-            //f is notation for final
-            Vector2ff v1nf = v1nCalc2.copy();
-            
-            Vector2ff v2nCalc = new Vector2ff(v2n.getX() * (m2 - m1), v2n.getY() * (m2 - m1));
-            Vector2ff v2nCalc2 = new Vector2ff(v1n.getX() * (2 * m1), v1n.getY() * (2 * m1));
-            v2nCalc.add(v1nCalc2); //does not conflict with pointers
-            v2nCalc2 = new Vector2ff(v2nCalc.getX() / (m1 + m2), v2nCalc.getY() / (m1 + m2));
-            //f is notation for final
-            Vector2ff v2nf = v2nCalc2.copy();
-            
-            Vector2ff v1tCalc = new Vector2ff(v1t.getX() * (m1 - m2), v1t.getY() * (m1 - m2));
-            Vector2ff v1tCalc2 = new Vector2ff(v2t.getX() * (2 * m2), v2t.getY() * (2 * m2));
-            v1tCalc.add(v1tCalc2); //does not conflict with pointers
-            v1tCalc2 = new Vector2ff(v1tCalc.getX() / (m1 + m2), v1tCalc.getY() / (m1 + m2));
-            //f is notation for final
-            Vector2ff v1tf = v1tCalc2.copy();
-            
-            Vector2ff v2tCalc = new Vector2ff(v2t.getX() * (m2 - m1), v2t.getY() * (m2 - m1));
-            Vector2ff v2tCalc2 = new Vector2ff(v1t.getX() * (2 * m1), v1t.getY() * (2 * m1));
-            v2tCalc.add(v1tCalc2); //does not conflict with pointers
-            v2tCalc2 = new Vector2ff(v2tCalc.getX() / (m1 + m2), v2tCalc.getY() / (m1 + m2));
-            //f is notation for final
-            Vector2ff v2tf = v2tCalc2.copy();
-            
-            //Step 6
-            v1nf = unitNormal.copy().scale(v1nf.length());
-            v1tf = unitNormal.copy().scale(v1tf.length());
-            v2nf = unitNormal.copy().scale(v2nf.length());
-            v2tf = unitNormal.copy().scale(v2tf.length());
-            
-            //Step 7
-            Vector2ff v1f = v1nf.copy().add(v1tf);
-            Vector2ff v2f = v2nf.copy().add(v2tf);
-            
-            velocity = v1f.copy();
-            other.setVelocity(v2f.copy());
-             */
+
+            Vector2f Dn = center.copy().sub(otherCenter);
+
+            // The distance between the balls
+            float delta = Dn.length();
+
+            // The normal vector of the collision plane
+            Dn.normalise();
+
+            // The tangential vector of the collision plane
+            Vector2f Dt = new Vector2f(Dn.y, -Dn.x);
+
+            //the masses of the two balls
+            float m1 = this.mass;
+            float m2 = other.mass;
+            float M = m1 + m2;
+
+            // minimum translation distance to push balls apart after intersecting
+            Vector2f mT = Dn.copy().scale((this.getBlock().getWidth() / 2 + other.getBlock().getWidth() / 2 - delta));
+
+            // push the balls apart proportional to their mass
+            this.position.add(mT.scale(m2 / M));
+            other.position.add(mT.scale(m1 / M));
+
+            // the velocity vectors of the balls before the collision
+            Vector2f v1 = this.velocity;
+            Vector2f v2 = other.velocity;
+
+            // split the velocity vector of the first ball into a normal and a tangential component in respect of the collision plane
+            Vector2f v1n = Dn.scale(v1.dot(Dn));
+            Vector2f v1t = Dt.scale(v1.dot(Dt));
+
+
+            // split the velocity vector of the second ball into a normal and a tangential component in respect of the collision plane
+            Vector2f v2n = Dn * Vector2f.Dot(v2, Dn);
+            Vector2f v2t = Dt * Vector2f.Dot(v2, Dt);
+
+            // calculate new velocity vectors of the balls, the tangential component stays the same, the normal component changes analog to the 1-Dimensional case
+            this.Velocity = v1t + Dn * ((m1 - m2) / M * v1n.Length() + 2 * m2 / M * v2n.Length());
+            ball.velocity = v2t - Dn * ((m2 - m1) / M * v2n.Length() + 2 * m1 / M * v1n.Length());
+
+
+
+
         }
 
-        //old, imperfect collision
-        /*
-        if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
-        {
-        Vector2ff positionCalc = new Vector2ff(block.getCenterX(), block.getCenterY());
-        Vector2ff positionCalc2 = new Vector2ff(e.getBlock().getCenterX(), e.getBlock().getCenterY());
-        positionCalc.add(positionCalc2);
-        double theta2 = positionCalc.getTheta();
-        double theta1 = velocity.getTheta();
-        velocity.setTheta(theta1 + 2 * theta2);
-        }
-         */
-        //old collision - just reversed velocity vector
-        /*
-        if (this.getBlock().intersects(((BlockEntity) e).getBlock()))
-        {
-        velocity.set(-velocity.x, -velocity.y);
-        setPosition(getPosition().add(velocity));
-        }
-         */
     }
 
     public void edgeCollide(GameContainer container)
