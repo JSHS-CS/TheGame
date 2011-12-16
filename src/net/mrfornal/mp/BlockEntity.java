@@ -32,6 +32,12 @@ public class BlockEntity extends Entity
     protected int maxHP; //TODO: Put maxhp in a static class that handles block types and their respective maxhp values (HashMap)
     protected Image sprite;
 
+    //default - do not use
+    public BlockEntity()
+    {
+        this(null, "", 0, 0, 0, 0, 0, 1, null);
+    }
+    
     public BlockEntity(Shape s, String name, float mass)
     {
         this(s, name, mass, 0, 0);
@@ -182,7 +188,7 @@ public class BlockEntity extends Entity
                 }
 
                 acceleration.set(new Vector2f(accX, accY));
-                System.out.println(acceleration.x + " " + acceleration.y);
+                //System.out.println(acceleration.x + " " + acceleration.y);
                 velocity.add(acceleration);
                 //accelerate based on position of other blocks
 
@@ -197,7 +203,7 @@ public class BlockEntity extends Entity
         block.setY(getPosition().y);
 
         //prevents from leaving screen
-
+        edgeCollide(container);
     }
 
     public void collide(BlockEntity other)
@@ -237,40 +243,35 @@ public class BlockEntity extends Entity
             Vector2f v2 = other.velocity;
 
             // split the velocity vector of the first ball into a normal and a tangential component in respect of the collision plane
-            Vector2f v1n = Dn.scale(v1.dot(Dn));
-            Vector2f v1t = Dt.scale(v1.dot(Dt));
-
+            Vector2f v1n = Dn.copy().scale(v1.dot(Dn));
+            Vector2f v1t = Dt.copy().scale(v1.dot(Dt));
 
             // split the velocity vector of the second ball into a normal and a tangential component in respect of the collision plane
-            Vector2f v2n = Dn * Vector2f.Dot(v2, Dn);
-            Vector2f v2t = Dt * Vector2f.Dot(v2, Dt);
+            Vector2f v2n = Dn.copy().scale(v2.dot(Dn));
+            Vector2f v2t = Dt.copy().scale(v2.dot(Dt));
 
             // calculate new velocity vectors of the balls, the tangential component stays the same, the normal component changes analog to the 1-Dimensional case
-            this.Velocity = v1t + Dn * ((m1 - m2) / M * v1n.Length() + 2 * m2 / M * v2n.Length());
-            ball.velocity = v2t - Dn * ((m2 - m1) / M * v2n.Length() + 2 * m1 / M * v1n.Length());
-
-
-
-
+            this.velocity = v1t.copy().add(Dn.copy().scale((m1 - m2) / M * v1n.length() + 2 * m2 / M * v2n.length()));
+            other.velocity = v2t.copy().sub(Dn.copy().scale(((m2 - m1) / M * v2n.length() + 2 * m1 / M * v1n.length())));
         }
 
     }
 
     public void edgeCollide(GameContainer container)
     {
-        if (container.getWidth() + 50 < block.getMaxX())
+        if (container.getWidth() + AsteroidsGame.BOUNDARY < block.getMaxX())
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (container.getHeight() + 50 < block.getMaxY())
+        if (container.getHeight() + AsteroidsGame.BOUNDARY < block.getMaxY())
         {
             velocity.set(velocity.x, -velocity.y);
         }
-        if (-50 > position.x)
+        if (-AsteroidsGame.BOUNDARY > position.x)
         {
             velocity.set(-velocity.x, velocity.y);
         }
-        if (-50 > position.y)
+        if (-AsteroidsGame.BOUNDARY > position.y)
         {
             velocity.set(velocity.x, -velocity.y);
         }

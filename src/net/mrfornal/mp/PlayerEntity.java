@@ -91,7 +91,7 @@ public class PlayerEntity extends BlockEntity
                 }
 
                 acceleration.set(new Vector2f(accX, accY));
-                System.out.println(acceleration.x + " " + acceleration.y);
+                //System.out.println(acceleration.x + " " + acceleration.y);
                 velocity.add(acceleration);
                 //accelerate based on position of other blocks
 
@@ -142,8 +142,8 @@ public class PlayerEntity extends BlockEntity
         {
             fireWeapon();
         }
-        System.out.println(direction.toString());
-        System.out.println(theta);
+        //System.out.println(direction.toString());
+        //System.out.println(theta);
 
 
         setPosition(getPosition().add(velocity));
