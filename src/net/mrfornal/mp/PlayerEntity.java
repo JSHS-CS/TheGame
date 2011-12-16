@@ -100,25 +100,7 @@ public class PlayerEntity extends BlockEntity
 
 
                 //Collision with another block
-
-
-                if (this.getBlock().intersects(e.getBlock()))
-                {
-                    Vector2f positionCalc = new Vector2f();
-
-                    //theta in direction of other circle
-                    positionCalc.set(new Vector2f(e.getBlock().getCenterX(), e.getBlock().getCenterY()));
-                    positionCalc.sub(new Vector2f(block.getCenterX(), block.getCenterY()));
-
-                    //calculation
-                    double theta1 = velocity.getTheta();
-                    double theta2 = positionCalc.getTheta() + 180;
-                    double theta3 = theta2 - theta1;
-                    velocity.setTheta(theta1 + theta3);
-
-                    //boost so it doesn't stick
-                    position.add(velocity);
-                }
+                collide(e);
 
                 //old collision - just reversed velocity vector
                 /*
@@ -132,10 +114,10 @@ public class PlayerEntity extends BlockEntity
         }
 
         direction.setTheta(theta);
-        
-        sprite.setRotation((float)theta);
-        accelerationSprite.setRotation((float)theta);
-        
+
+        sprite.setRotation((float) theta);
+        accelerationSprite.setRotation((float) theta);
+
         if (i.isKeyDown(Input.KEY_W))
         {
             velocity.add(direction);
@@ -171,22 +153,7 @@ public class PlayerEntity extends BlockEntity
 
 
         //prevents from leaving screen
-        if (container.getWidth() + 50 < block.getMaxX())
-        {
-            velocity.set(-velocity.x, velocity.y);
-        }
-        if (container.getHeight() + 50 < block.getMaxY())
-        {
-            velocity.set(velocity.x, -velocity.y);
-        }
-        if (-50 > position.x)
-        {
-            velocity.set(-velocity.x, velocity.y);
-        }
-        if (-50 > position.y)
-        {
-            velocity.set(velocity.x, -velocity.y);
-        }
+        edgeCollide(container);
     }
 
     @Override

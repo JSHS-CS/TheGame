@@ -107,7 +107,6 @@ public class AsteroidsGame extends BasicGame
         {
             container.exit();
         }
-
         if (i.isKeyPressed(Input.KEY_1))
         {
             container.setMinimumLogicUpdateInterval(25);
@@ -132,7 +131,6 @@ public class AsteroidsGame extends BasicGame
         {
             container.setMinimumLogicUpdateInterval(1);
         }
-
     }
 
     @Override
@@ -159,6 +157,5 @@ public class AsteroidsGame extends BasicGame
             }
         }
         g.drawRect(-50, -50, container.getWidth()+100, container.getHeight()+100);
- 
-    }
+     }
 }
