@@ -66,6 +66,5 @@ public class MouseZoom implements MouseListener
         AsteroidsGame.scale += (float)change / 5000;
         if(AsteroidsGame.scale<=0.01f)
             AsteroidsGame.scale=.01f;
-        AsteroidsGame.scaleInv = 1/AsteroidsGame.scale;
     }
 }

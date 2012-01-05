@@ -25,7 +25,7 @@ import org.newdawn.slick.geom.Circle;
 public class AsteroidsGame extends BasicGame
 {
 
-    public static final int BOUNDARY = 2000; //extra boundary on top of screen size
+    public static final int BOUNDARY = 1000; //extra boundary on top of screen size
     private MyEntityManager manager;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
@@ -146,7 +146,6 @@ public class AsteroidsGame extends BasicGame
 
         Input i = container.getInput();
 
-
         Entity center = null;
         for (Entity e : manager.getBlockEntities())
         {
@@ -155,7 +154,8 @@ public class AsteroidsGame extends BasicGame
                 center = e;
             }
         }
-        g.translate(container.getWidth() / 2 - ((BlockEntity) center).getBlock().getCenterX(), container.getHeight() / 2 - ((BlockEntity) center).getBlock().getCenterY());
+        
+        g.translate(container.getWidth()/2  - ((BlockEntity) center).getBlock().getCenterX()*scale, container.getHeight()/2  - ((BlockEntity) center).getBlock().getCenterY()*scale);
 
         g.scale(scale, scale);
         for (Entity e : manager.getAllEntities())

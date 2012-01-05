@@ -37,7 +37,7 @@ public class BlockEntity extends Entity
     {
         this(null, "", 0, 0, 0, 0, 0, 1, null);
     }
-    
+
     public BlockEntity(Shape s, String name, float mass)
     {
         this(s, name, mass, 0, 0);
@@ -147,11 +147,25 @@ public class BlockEntity extends Entity
      * F = m1*a
      * 
      */
+    
+    //The important part!
+    //======================================================================
+    
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
 //        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
         ArrayList<BlockEntity> list = MyEntityManager.getInstance().getBlockEntities();
+
+        updateMovement(container, list);
+    }
+    
+    //======================================================================
+
+    public void updateMovement(GameContainer container, ArrayList<BlockEntity> list)
+    {
+        //prevents from leaving screen
+        edgeCollide(container);
 
         for (BlockEntity e : list)
         {
@@ -201,9 +215,6 @@ public class BlockEntity extends Entity
 
         block.setX(getPosition().x);
         block.setY(getPosition().y);
-
-        //prevents from leaving screen
-        edgeCollide(container);
     }
 
     public void collide(BlockEntity other)
