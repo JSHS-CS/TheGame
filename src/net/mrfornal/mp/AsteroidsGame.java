@@ -30,6 +30,8 @@ public class AsteroidsGame extends BasicGame
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final boolean FULL_SCREEN = false;
+    private static boolean debugRender = false;
+    private TargetingGUI targetGUI;
 
     /**
      * @param args the command line arguments
@@ -60,6 +62,10 @@ public class AsteroidsGame extends BasicGame
     @Override
     public void init(GameContainer container) throws SlickException
     {
+        targetGUI = new TargetingGUI(container);
+        
+        
+        
         container.getInput().addMouseListener(new MouseZoom());
         container.setMinimumLogicUpdateInterval(25);
 
@@ -67,13 +73,20 @@ public class AsteroidsGame extends BasicGame
         Image img2 = new Image("resource/image/mp1a.png");
 
 
-        BlockEntity b = new BlockEntity(new Circle(0, 0, 150), "TestBlock2", 7000, 180, 130, +.0f, 0, 20000, null);
+        //BlockEntity b = new BlockEntity(new Circle(0, 0, 150), "TestBlock2", 7000, 180, 130, +.0f, 0, 20000, null);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 25), "TestBlock2", 1000, 100, 100, +.0f, 0, 500);
         PlayerEntity a = new PlayerEntity(new Circle(0, 0, 50), "TestBlock1", 100, 0, 0, -.22f, .05f, 2000, img1, img2);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
         //manager.addBlockEntity(c);
+        
+        for (int i = 1; i < 40; i+=10)
+        {
+            manager.addBlockEntity(new BlockEntity(new Circle(0, 0, 10*i), "TestBlock2", 500*i, 40*i-400, 15*i-400, +.0f, 0, 500*i, null));
+            
+        }
+        
         manager.addBlockEntity(a);
-        manager.addBlockEntity(b);
+//        manager.addBlockEntity(b);
     }
 
     @Override
@@ -134,15 +147,19 @@ public class AsteroidsGame extends BasicGame
         {
             container.setMinimumLogicUpdateInterval(1);
         }
-
+        if(i.isKeyPressed(Input.KEY_0))
+        {
+            debugRender = !debugRender;
+        }
 
     }
+    
     public static float scale = 1;
-    public static float scaleInv = 1;
 
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
+        
 
         Input i = container.getInput();
 
@@ -171,5 +188,13 @@ public class AsteroidsGame extends BasicGame
         }
         g.drawRect(-BOUNDARY, -BOUNDARY, container.getWidth() + BOUNDARY * 2, container.getHeight() + BOUNDARY * 2);
 
+        //draw GUI
+        //unscale the zoom so GUI isn't affected
+        g.scale(1/scale, 1/scale);
+        g.translate(-container.getWidth()/2  - -((BlockEntity) center).getBlock().getCenterX()*scale, -container.getHeight()/2  - -((BlockEntity) center).getBlock().getCenterY()*scale);
+
+        targetGUI.render(container, g);    
+        
+        
     }
 }
