@@ -23,14 +23,14 @@ public class PlayerEntity extends BlockEntity
     //governs what direction input will cause to accelerate
 
     private double theta;
-    private Vector2f direction;
+    private Vector2f engineAcceleration;
     private Image accelerationSprite;
 
     public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp, Image spr, Image aSpr)
     {
         super(s, name, mass, x, y, vX, vY, maxhp, spr);
-        direction = new Vector2f(.003f, 0); //default acceleration
-        direction.setTheta(theta);
+        engineAcceleration = new Vector2f(.01f, 0); //default acceleration
+        engineAcceleration.setTheta(theta);
         accelerationSprite = aSpr;
     }
 
@@ -44,7 +44,7 @@ public class PlayerEntity extends BlockEntity
     private void fireWeapon()
     {
         Vector2f pos = new Vector2f(block.getCenterX(), block.getCenterY());
-        MyEntityManager.getInstance().addBulletEntity(new BulletEntity(1.0f, 10, velocity, pos, theta, name, block.getWidth() / 2));
+        MyEntityManager.getInstance().addBulletEntity(new BulletEntity(3.0f, 10, velocity, pos, theta, name, block.getWidth() / 2));
     }
 
     //======================================================================
@@ -62,7 +62,8 @@ public class PlayerEntity extends BlockEntity
     public void updateMovement(GameContainer container, ArrayList<BlockEntity> list)
     {
         //prevents from leaving screen
-        edgeCollide(container);
+        //moved to MyEntityManager
+        //edgeCollide(container);
         for (BlockEntity e : list)
         {
             if (!e.equals(this) && e.getMass() > 50)
@@ -101,16 +102,17 @@ public class PlayerEntity extends BlockEntity
         block.setX(getPosition().x);
         block.setY(getPosition().y);
     }
+
     public void updatePlayerInput(GameContainer container)
     {
         //Player Input
         Input i = container.getInput();
-        direction.setTheta(theta);
+        engineAcceleration.setTheta(theta);
         sprite.setRotation((float) theta);
         accelerationSprite.setRotation((float) theta);
         if (i.isKeyDown(Input.KEY_W))
         {
-            velocity.add(direction);
+            velocity.add(engineAcceleration);
         }
         if (i.isKeyDown(Input.KEY_A))
         {
@@ -118,7 +120,7 @@ public class PlayerEntity extends BlockEntity
         }
         if (i.isKeyDown(Input.KEY_S))
         {
-            velocity.add(direction.negate());
+            velocity.add(engineAcceleration.negate());
         }
         if (i.isKeyDown(Input.KEY_D))
         {

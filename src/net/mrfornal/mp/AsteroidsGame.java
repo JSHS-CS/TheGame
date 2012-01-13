@@ -151,6 +151,8 @@ public class AsteroidsGame extends BasicGame
         {
             debugRender = !debugRender;
         }
+        
+        MyEntityManager.getInstance().checkBoundaries(container);
 
     }
     
@@ -181,7 +183,8 @@ public class AsteroidsGame extends BasicGame
             {
                 center = e;
             }
-            if (e.getPosition().x > -BOUNDARY && e.getPosition().x < container.getWidth() + BOUNDARY && e.getPosition().y > -BOUNDARY && e.getPosition().y < container.getHeight() + BOUNDARY)
+            //TODO: Make dynamic rendering only render things on screen
+            //if (e.getPosition().x > -BOUNDARY && e.getPosition().x < container.getWidth() + BOUNDARY && e.getPosition().y > -BOUNDARY && e.getPosition().y < container.getHeight() + BOUNDARY)
             {
                 e.render(container, g);
             }

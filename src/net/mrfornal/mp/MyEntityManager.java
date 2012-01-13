@@ -3,6 +3,9 @@ package net.mrfornal.mp;
 import net.mrfornal.entity.*;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
 
 /**
  * This singleton class manages all the entities in the game.
@@ -18,7 +21,6 @@ public class MyEntityManager
     private ArrayList<Entity> entities; //contains miscellaneous entities
     private ArrayList<BlockEntity> blockEntities; //contains anything with a shape that isn't bullet
     private ArrayList<BulletEntity> bulletEntities; //contains bullets that do damage and disappear on contact
-    
     private TreeMap<String, BulletEntity> bulletDefaults; //contains stock bullet definitions to be copied into existence
     //singleton instance
     private static MyEntityManager instance;
@@ -114,8 +116,10 @@ public class MyEntityManager
         for (int i = 0; i < bulletEntities.size(); i++)
         {
             BulletEntity e = bulletEntities.get(i);
-            if(e.deadBullet)
+            if (e.deadBullet)
+            {
                 bulletEntities.remove(i);
+            }
         }
         return bulletEntities;
     }
@@ -137,5 +141,62 @@ public class MyEntityManager
             instance = new MyEntityManager();
         }
         return instance;
+    }
+    //rather than bouncing the block off of the edge, make it gradually come back in
+    //sort of an elastic slingshot effect
+    Vector2f boundaryAccelerationX = new Vector2f(.05f, .0f);
+    Vector2f boundaryAccelerationY = new Vector2f(.0f, .05f);
+
+    public void checkBoundaries(GameContainer container)
+    {
+        for (BlockEntity entity : getBlockEntities())
+        {
+            Vector2f velocity = entity.getVelocity();
+            Shape block = entity.getBlock();
+            if (container.getWidth() + AsteroidsGame.BOUNDARY < block.getMaxX())
+            {
+                velocity.add(boundaryAccelerationX.negate());
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+            if (container.getHeight() + AsteroidsGame.BOUNDARY < block.getMaxY())
+            {
+                velocity.add(boundaryAccelerationY.negate());
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+            if (-AsteroidsGame.BOUNDARY > block.getMinX())
+            {
+                velocity.add(boundaryAccelerationX);
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+            if (-AsteroidsGame.BOUNDARY > block.getMinY())
+            {
+                velocity.add(boundaryAccelerationY);
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.999f);
+                }
+            }
+        }
+        for (BulletEntity entity : getBulletEntities())
+        {
+            Vector2f position = entity.getPosition();
+            if (container.getWidth() + AsteroidsGame.BOUNDARY < position.x || container.getHeight() + AsteroidsGame.BOUNDARY < position.y)
+            {
+                entity.deadBullet = true;
+            }
+            if (-AsteroidsGame.BOUNDARY > position.x || -AsteroidsGame.BOUNDARY > position.y)
+            {
+                entity.deadBullet = true;
+            }
+        }
     }
 }

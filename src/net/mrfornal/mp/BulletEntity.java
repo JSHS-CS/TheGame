@@ -69,14 +69,15 @@ public class BulletEntity extends Entity
          */
 
         //removes if off screen - will be cleaned up by MyEntityManager
-        if (container.getWidth() + AsteroidsGame.BOUNDARY < position.x || container.getHeight() + AsteroidsGame.BOUNDARY < position.y)
-        {
-            deadBullet = true;
-        }
-        if (-AsteroidsGame.BOUNDARY > position.x || -AsteroidsGame.BOUNDARY > position.y)
-        {
-            deadBullet = true;
-        }
+        //DONE - moved to MyEntityManager
+//        if (container.getWidth() + AsteroidsGame.BOUNDARY < position.x || container.getHeight() + AsteroidsGame.BOUNDARY < position.y)
+//        {
+//            deadBullet = true;
+//        }
+//        if (-AsteroidsGame.BOUNDARY > position.x || -AsteroidsGame.BOUNDARY > position.y)
+//        {
+//            deadBullet = true;
+//        }
 
         position.add(velocity);
 

@@ -147,10 +147,8 @@ public class BlockEntity extends Entity
      * F = m1*a
      * 
      */
-    
     //The important part!
     //======================================================================
-    
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
@@ -159,13 +157,13 @@ public class BlockEntity extends Entity
 
         updateMovement(container, list);
     }
-    
-    //======================================================================
 
+    //======================================================================
     public void updateMovement(GameContainer container, ArrayList<BlockEntity> list)
     {
         //prevents from leaving screen
-        edgeCollide(container);
+        //moved to MyEntityManager
+//        edgeCollide(container);
 
         for (BlockEntity e : list)
         {
@@ -268,26 +266,28 @@ public class BlockEntity extends Entity
 
     }
 
+    //obsolete method
+    /*
     public void edgeCollide(GameContainer container)
     {
-        if (container.getWidth() + AsteroidsGame.BOUNDARY < block.getMaxX())
-        {
-            velocity.set(-velocity.x, velocity.y);
-        }
-        if (container.getHeight() + AsteroidsGame.BOUNDARY < block.getMaxY())
-        {
-            velocity.set(velocity.x, -velocity.y);
-        }
-        if (-AsteroidsGame.BOUNDARY > position.x)
-        {
-            velocity.set(-velocity.x, velocity.y);
-        }
-        if (-AsteroidsGame.BOUNDARY > position.y)
-        {
-            velocity.set(velocity.x, -velocity.y);
-        }
+    if (container.getWidth() + AsteroidsGame.BOUNDARY < block.getMaxX())
+    {
+    velocity.set(-velocity.x, velocity.y);
     }
-
+    if (container.getHeight() + AsteroidsGame.BOUNDARY < block.getMaxY())
+    {
+    velocity.set(velocity.x, -velocity.y);
+    }
+    if (-AsteroidsGame.BOUNDARY > position.x)
+    {
+    velocity.set(-velocity.x, velocity.y);
+    }
+    if (-AsteroidsGame.BOUNDARY > position.y)
+    {
+    velocity.set(velocity.x, -velocity.y);
+    }
+    }
+     */
     @Override
     public void init(GameContainer container) throws SlickException
     {
