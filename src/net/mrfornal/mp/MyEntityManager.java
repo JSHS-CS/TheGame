@@ -25,6 +25,8 @@ public class MyEntityManager
     //singleton instance
     private static MyEntityManager instance;
 
+    private BlockEntity player; //the player's accessible state
+    
     private MyEntityManager()
     {
         entities = new ArrayList<Entity>();
@@ -124,6 +126,18 @@ public class MyEntityManager
         return bulletEntities;
     }
 
+    public void setPlayer(BlockEntity player)
+    {
+        this.player = player;
+    }
+
+    public BlockEntity getPlayer()
+    {
+        return player;
+    }
+    
+    
+
     public void setBulletEntities(ArrayList<BulletEntity> bulletEntities)
     {
         this.bulletEntities = bulletEntities;
@@ -144,8 +158,8 @@ public class MyEntityManager
     }
     //rather than bouncing the block off of the edge, make it gradually come back in
     //sort of an elastic slingshot effect
-    Vector2f boundaryAccelerationX = new Vector2f(.05f, .0f);
-    Vector2f boundaryAccelerationY = new Vector2f(.0f, .05f);
+    Vector2f boundaryAccelerationX = new Vector2f(.2f, .0f);
+    Vector2f boundaryAccelerationY = new Vector2f(.0f, .2f);
 
     public void checkBoundaries(GameContainer container)
     {
@@ -182,7 +196,7 @@ public class MyEntityManager
                 velocity.add(boundaryAccelerationY);
                 if (velocity.length() > 2.5f)
                 {
-                    velocity.scale(0.999f);
+                    velocity.scale(0.99f);
                 }
             }
         }

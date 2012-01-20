@@ -6,6 +6,7 @@ package net.mrfornal.mp;
 
 import java.util.ArrayList;
 import net.mrfornal.entity.Entity;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -94,7 +95,7 @@ public class BulletEntity extends Entity
                 e.takeDamage(this.damage);
 
                 //destroy BlockEntity if below 0 hp
-                if (e.getHP() < 0)
+                if (e.getHP() <= 0)
                 {
                     temp.remove(i);
                 }
@@ -111,6 +112,8 @@ public class BulletEntity extends Entity
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
+        g.setColor(Color.yellow);
         g.drawOval(getPosition().x, getPosition().y, 2, 2);
+        g.setColor(Color.white);
     }
 }

@@ -152,6 +152,8 @@ public class BlockEntity extends Entity
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
+        //code to remove if HP is equal to or under 0 is in BulletEntity
+        
 //        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
         ArrayList<BlockEntity> list = MyEntityManager.getInstance().getBlockEntities();
 

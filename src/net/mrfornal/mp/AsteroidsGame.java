@@ -21,11 +21,12 @@ import org.newdawn.slick.geom.Circle;
 /**
  *
  * @author sfornal
+ * @author pham266693
  */
 public class AsteroidsGame extends BasicGame
 {
 
-    public static final int BOUNDARY = 1000; //extra boundary on top of screen size
+    public static final int BOUNDARY = 5000; //extra boundary on top of screen size
     private MyEntityManager manager;
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
@@ -63,29 +64,26 @@ public class AsteroidsGame extends BasicGame
     public void init(GameContainer container) throws SlickException
     {
         targetGUI = new TargetingGUI(container);
-        
-        
-        
+
         container.getInput().addMouseListener(new MouseZoom());
         container.setMinimumLogicUpdateInterval(25);
 
         Image img1 = new Image("resource/image/mp1.png");
         Image img2 = new Image("resource/image/mp1a.png");
 
-
         //BlockEntity b = new BlockEntity(new Circle(0, 0, 150), "TestBlock2", 7000, 180, 130, +.0f, 0, 20000, null);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 25), "TestBlock2", 1000, 100, 100, +.0f, 0, 500);
         PlayerEntity a = new PlayerEntity(new Circle(0, 0, 50), "TestBlock1", 100, 0, 0, -.22f, .05f, 2000, img1, img2);
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
         //manager.addBlockEntity(c);
-        
-        for (int i = 1; i < 40; i+=10)
+
+        for (int i = 1; i < 40; i += 10)
         {
-            manager.addBlockEntity(new BlockEntity(new Circle(0, 0, 10*i), "TestBlock2", 500*i, 40*i-400, 15*i-400, +.0f, 0, 500*i, null));
-            
+            manager.addBlockEntity(new BlockEntity(new Circle(0, 0, 10 * i), "TestBlock"+(i+20)/10, 500 * i, 40 * i - 400, 15 * i - 400, +.0f, 0, 500 * i, null));
         }
-        
+
         manager.addBlockEntity(a);
+        manager.setPlayer(a);
 //        manager.addBlockEntity(b);
     }
 
@@ -147,21 +145,22 @@ public class AsteroidsGame extends BasicGame
         {
             container.setMinimumLogicUpdateInterval(1);
         }
-        if(i.isKeyPressed(Input.KEY_0))
+        if (i.isKeyPressed(Input.KEY_0))
         {
             debugRender = !debugRender;
         }
-        
+
         MyEntityManager.getInstance().checkBoundaries(container);
+        
+        targetGUI.update(container, delta);
 
     }
-    
     public static float scale = 1;
 
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
-        
+
 
         Input i = container.getInput();
 
@@ -173,8 +172,8 @@ public class AsteroidsGame extends BasicGame
                 center = e;
             }
         }
-        
-        g.translate(container.getWidth()/2  - ((BlockEntity) center).getBlock().getCenterX()*scale, container.getHeight()/2  - ((BlockEntity) center).getBlock().getCenterY()*scale);
+
+        g.translate(container.getWidth() / 2 - ((BlockEntity) center).getBlock().getCenterX() * scale, container.getHeight() / 2 - ((BlockEntity) center).getBlock().getCenterY() * scale);
 
         g.scale(scale, scale);
         for (Entity e : manager.getAllEntities())
@@ -193,11 +192,11 @@ public class AsteroidsGame extends BasicGame
 
         //draw GUI
         //unscale the zoom so GUI isn't affected
-        g.scale(1/scale, 1/scale);
-        g.translate(-container.getWidth()/2  - -((BlockEntity) center).getBlock().getCenterX()*scale, -container.getHeight()/2  - -((BlockEntity) center).getBlock().getCenterY()*scale);
+        g.scale(1 / scale, 1 / scale);
+        g.translate(-container.getWidth() / 2 - -((BlockEntity) center).getBlock().getCenterX() * scale, -container.getHeight() / 2 - -((BlockEntity) center).getBlock().getCenterY() * scale);
 
-        targetGUI.render(container, g);    
-        
-        
+        targetGUI.render(container, g);
+
+
     }
 }

@@ -29,9 +29,10 @@ public class PlayerEntity extends BlockEntity
     public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp, Image spr, Image aSpr)
     {
         super(s, name, mass, x, y, vX, vY, maxhp, spr);
-        engineAcceleration = new Vector2f(.01f, 0); //default acceleration
+        engineAcceleration = new Vector2f(.05f, 0); //default acceleration
         engineAcceleration.setTheta(theta);
         accelerationSprite = aSpr;
+        
     }
 
     @Override
@@ -116,7 +117,7 @@ public class PlayerEntity extends BlockEntity
         }
         if (i.isKeyDown(Input.KEY_A))
         {
-            theta -= 1;
+            theta -= 2.5;
         }
         if (i.isKeyDown(Input.KEY_S))
         {
@@ -124,7 +125,7 @@ public class PlayerEntity extends BlockEntity
         }
         if (i.isKeyDown(Input.KEY_D))
         {
-            theta += 1;
+            theta += 2.5;
         }
         if (i.isKeyPressed(Input.KEY_LCONTROL))
         {
