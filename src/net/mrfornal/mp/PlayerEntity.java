@@ -25,6 +25,8 @@ public class PlayerEntity extends BlockEntity
     private double theta;
     private Vector2f engineAcceleration;
     private Image accelerationSprite;
+    int weaponCooldownMax = 20;
+    int cooldown = 0;
 
     public PlayerEntity(Shape s, String name, float mass, float x, float y, float vX, float vY, int maxhp, Image spr, Image aSpr)
     {
@@ -32,7 +34,7 @@ public class PlayerEntity extends BlockEntity
         engineAcceleration = new Vector2f(.05f, 0); //default acceleration
         engineAcceleration.setTheta(theta);
         accelerationSprite = aSpr;
-        
+
     }
 
     @Override
@@ -42,10 +44,10 @@ public class PlayerEntity extends BlockEntity
     }
 
     //fires current equipped weapon
-    private void fireWeapon()
+    private void fireWeapon() throws SlickException
     {
         Vector2f pos = new Vector2f(block.getCenterX(), block.getCenterY());
-        MyEntityManager.getInstance().addBulletEntity(new BulletEntity(3.0f, 10, velocity, pos, theta, name, block.getWidth() / 2));
+        MyEntityManager.getInstance().addBulletEntity(new RocketEntity(3.0f, 200, velocity, pos, theta, name, block.getWidth() / 2, .07f,new Image("resource/image/mp_missile.png"),TargetingGUI.currentTarget));
     }
 
     //======================================================================
@@ -104,7 +106,7 @@ public class PlayerEntity extends BlockEntity
         block.setY(getPosition().y);
     }
 
-    public void updatePlayerInput(GameContainer container)
+    public void updatePlayerInput(GameContainer container) throws SlickException
     {
         //Player Input
         Input i = container.getInput();
@@ -133,7 +135,12 @@ public class PlayerEntity extends BlockEntity
         }
         if (i.isKeyDown(Input.KEY_Z) && i.isKeyDown(Input.KEY_LCONTROL))
         {
-            fireWeapon();
+            cooldown++;
+            if (cooldown == weaponCooldownMax)
+            {
+                fireWeapon();
+                cooldown = 0;
+            }
         }
     }
 

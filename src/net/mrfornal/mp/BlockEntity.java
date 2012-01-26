@@ -23,7 +23,7 @@ public class BlockEntity extends Entity
     // G the Universal Gravitational Constant (6.67x10-11 N.m2/kg2), 
     // It is scaled up to increase gravitational attraction
 
-    public static final float ugc = (float) (6.67 * Math.pow(10, -7));
+    public static final float ugc = (float) (6.67 * Math.pow(10, -5));
     protected Vector2f velocity;
     protected Shape block;
     protected float mass;
@@ -66,6 +66,11 @@ public class BlockEntity extends Entity
         this.maxHP = maxHP;
         hp = maxHP;
         sprite = spr;
+    }
+    
+    public Vector2f getCenterPosition()
+    {
+        return new Vector2f(block.getCenterX(), block.getCenterY());
     }
 
     public void addToManager()

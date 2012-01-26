@@ -7,6 +7,7 @@ package net.mrfornal.mp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -28,9 +29,10 @@ public class TargetingGUI
     //3 all;
     //4 important;
     private ArrayList<MouseOverArea> typeButtons = new ArrayList<MouseOverArea>();
-    private BlockEntity currentTarget;
+    public static BlockEntity currentTarget;
     //objects in targetable range
     private ArrayList<Targetable> targets;
+    private ArrayList<TargetButton> buttons;
     //absolute position of targetingGUI
     private float posY;
     private float posX;
@@ -57,6 +59,12 @@ public class TargetingGUI
         typeButtons.get(4).setMouseOverImage(new Image("resource/image/tgui_important_h.png"));
 
         targets = new ArrayList<Targetable>();
+        buttons = new ArrayList<TargetButton>();
+
+        for (int i = 0; i < 10; i++)
+        {
+            buttons.add(new TargetButton(container, new Image("resource/image/tgui_empty.png"), new Rectangle(posX, (int) (int) (posY + (15 * i)) + 25, 100, 15)));
+        }
     }
     //concept for bottom left targeting GUI
     /* 
@@ -77,10 +85,16 @@ public class TargetingGUI
 
     public void update(GameContainer container, int delta) throws SlickException
     {
+        for (Targetable target : targets)
+        {
+            target.update(container);
+        }
+
         list = MyEntityManager.getInstance().getBlockEntities();
         //ticker runs every 30 game ticks (or whatever update interval is.)
         if (ticker == UPDATE_INTERVAL)
         {
+            //gets targets to put in targetable
             for (BlockEntity block : list)
             {
                 boolean alreadyExists = false;
@@ -96,12 +110,33 @@ public class TargetingGUI
                     targets.add(new Targetable(container, block, (int) posX, (int) posY));
                 }
             }
+            //removes dead targetables
+            for (int i = 0; i < targets.size(); i++)
+            {
+                if (targets.get(i).getTarget().getHP() <= 0)
+                {
+                    targets.remove(i);
+                currentTarget = null;
+                }
+            }
+
+
 
             Collections.sort(targets, new DistanceSorter());
+
+            for (int i = 0; i < buttons.size() && i < targets.size(); i++)
+            {
+                buttons.get(i).setCurrentTarget(targets.get(i)); //assigns closest values to top of targeting screen
+            }
+
             ticker = 0;
         } else
         {
             ticker++;
+        }
+        for (TargetButton b : buttons)
+        {
+            b.update(container);
         }
     }
 
@@ -110,23 +145,31 @@ public class TargetingGUI
         for (MouseOverArea button : typeButtons)
         {
             button.render(container, g);
+
         }
         //only draws the first several objects in the array
         //in case there are less than 6 objects
-        if (targets.size() > 6)
+        for (int i = 0; i < buttons.size(); i++)
         {
-            for (int i = 0; i < 6; i++)
-            {
-                targets.get(i).render(container, g, posX, posY + 15 * i);
-            }
-        } else
-        {
-            for (int i = 0; i < targets.size(); i++)
-            {
-                targets.get(i).render(container, g, posX, posY + 15 * i);
-            }
+            buttons.get(i).render(container, g);
+            buttons.get(i).render(container, g, posX, posY + 25 + 15 * i);
         }
 
+
+    }
+
+    public void renderCrosshairs(GameContainer container, Graphics g) throws SlickException
+    {
+        if (currentTarget != null && currentTarget.getHP() > 0)
+        {
+
+            g.setColor(Color.red);
+            g.drawRect(currentTarget.getBlock().getMinX(), currentTarget.getBlock().getMinY(), currentTarget.getBlock().getWidth(), currentTarget.getBlock().getHeight());
+            g.drawLine(currentTarget.getBlock().getCenterX() + currentTarget.getBlock().getWidth(), currentTarget.getBlock().getCenterY(), currentTarget.getBlock().getCenterX() - currentTarget.getBlock().getWidth(), currentTarget.getBlock().getCenterY());
+            g.drawLine(currentTarget.getBlock().getCenterX(), currentTarget.getBlock().getCenterY() + currentTarget.getBlock().getHeight(), currentTarget.getBlock().getCenterX(), currentTarget.getBlock().getCenterY() - currentTarget.getBlock().getHeight());
+            g.setColor(Color.white);
+        }
+        //crosshairs
     }
 
     public void debugRender()

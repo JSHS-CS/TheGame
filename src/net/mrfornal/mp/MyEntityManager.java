@@ -20,8 +20,8 @@ public class MyEntityManager
 
     private ArrayList<Entity> entities; //contains miscellaneous entities
     private ArrayList<BlockEntity> blockEntities; //contains anything with a shape that isn't bullet
-    private ArrayList<BulletEntity> bulletEntities; //contains bullets that do damage and disappear on contact
-    private TreeMap<String, BulletEntity> bulletDefaults; //contains stock bullet definitions to be copied into existence
+    private ArrayList<RocketEntity> rocketEntities; //contains bullets that do damage and disappear on contact
+    private TreeMap<String, RocketEntity> bulletDefaults; //contains stock bullet definitions to be copied into existence
     //singleton instance
     private static MyEntityManager instance;
 
@@ -31,7 +31,7 @@ public class MyEntityManager
     {
         entities = new ArrayList<Entity>();
         blockEntities = new ArrayList<BlockEntity>();
-        bulletEntities = new ArrayList<BulletEntity>();
+        rocketEntities = new ArrayList<RocketEntity>();
     }
 
     public ArrayList<Entity> getAllEntities()
@@ -39,7 +39,7 @@ public class MyEntityManager
         ArrayList<Entity> entityList = new ArrayList<Entity>();
         entityList.addAll(entities);
         entityList.addAll(blockEntities);
-        entityList.addAll(bulletEntities);
+        entityList.addAll(rocketEntities);
         return entityList;
     }
 
@@ -90,9 +90,9 @@ public class MyEntityManager
         blockEntities.add(e);
     }
 
-    public BulletEntity getBulletEntity(String name)
+    public RocketEntity getBulletEntity(String name)
     {
-        for (BulletEntity e : bulletEntities)
+        for (RocketEntity e : rocketEntities)
         {
             if ((e.getName().equals(name)))
             {
@@ -113,17 +113,17 @@ public class MyEntityManager
         this.blockEntities = blockEntities;
     }
 
-    public ArrayList<BulletEntity> getBulletEntities()
+    public ArrayList<RocketEntity> getBulletEntities()
     {
-        for (int i = 0; i < bulletEntities.size(); i++)
+        for (int i = 0; i < rocketEntities.size(); i++)
         {
-            BulletEntity e = bulletEntities.get(i);
+            RocketEntity e = rocketEntities.get(i);
             if (e.deadBullet)
             {
-                bulletEntities.remove(i);
+                rocketEntities.remove(i);
             }
         }
-        return bulletEntities;
+        return rocketEntities;
     }
 
     public void setPlayer(BlockEntity player)
@@ -138,14 +138,14 @@ public class MyEntityManager
     
     
 
-    public void setBulletEntities(ArrayList<BulletEntity> bulletEntities)
+    public void setBulletEntities(ArrayList<RocketEntity> bulletEntities)
     {
-        this.bulletEntities = bulletEntities;
+        this.rocketEntities = bulletEntities;
     }
 
-    public void addBulletEntity(BulletEntity e)
+    public void addBulletEntity(RocketEntity e)
     {
-        bulletEntities.add(e);
+        rocketEntities.add(e);
     }
 
     public static MyEntityManager getInstance()
@@ -200,7 +200,7 @@ public class MyEntityManager
                 }
             }
         }
-        for (BulletEntity entity : getBulletEntities())
+        for (RocketEntity entity : getBulletEntities())
         {
             Vector2f position = entity.getPosition();
             if (container.getWidth() + AsteroidsGame.BOUNDARY < position.x || container.getHeight() + AsteroidsGame.BOUNDARY < position.y)

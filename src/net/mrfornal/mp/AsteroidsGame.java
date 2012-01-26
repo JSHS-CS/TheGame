@@ -77,9 +77,9 @@ public class AsteroidsGame extends BasicGame
         //BlockEntity c = new BlockEntity(new Circle(0, 0, 2), "TestBlock3", 3, 440, 240, +.23f, 0);
         //manager.addBlockEntity(c);
 
-        for (int i = 1; i < 40; i += 10)
+        for (int i = 1; i < 80; i += 10)
         {
-            manager.addBlockEntity(new BlockEntity(new Circle(0, 0, 10 * i), "TestBlock"+(i+20)/10, 500 * i, 40 * i - 400, 15 * i - 400, +.0f, 0, 500 * i, null));
+            manager.addBlockEntity(new BlockEntity(new Circle(0, 0, 10 * i), "TestBlock" + (i + 20) / 10, 500 * i, 40 * i - 400, 15 * i - 400, +.0f, 0, 500 * i, null));
         }
 
         manager.addBlockEntity(a);
@@ -151,12 +151,13 @@ public class AsteroidsGame extends BasicGame
         }
 
         MyEntityManager.getInstance().checkBoundaries(container);
-        
+
         targetGUI.update(container, delta);
 
     }
     public static float scale = 1;
 
+    
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
@@ -190,6 +191,8 @@ public class AsteroidsGame extends BasicGame
         }
         g.drawRect(-BOUNDARY, -BOUNDARY, container.getWidth() + BOUNDARY * 2, container.getHeight() + BOUNDARY * 2);
 
+        
+        targetGUI.renderCrosshairs(container, g);
         //draw GUI
         //unscale the zoom so GUI isn't affected
         g.scale(1 / scale, 1 / scale);

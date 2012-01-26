@@ -9,6 +9,7 @@ import net.mrfornal.entity.Entity;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -16,23 +17,29 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author pham266693
  */
-public class BulletEntity extends Entity
+public class RocketEntity extends Entity
 {
 
     private float initSpeed; //not actually given a value; used to hold data in stock bullets
-    private int damage; //TODO: Put in a static class that handles bullet types and their assigned damage values (TreeMap)
+    private Vector2f acceleration;
+    private int damage; //TODO: Put in a static class that handles bullet types and their assigned values (TreeMap)
     private Vector2f velocity;
     private String originBlock;
     public boolean deadBullet = false; //if true, remove from game
+    BlockEntity target;
+    double theta;
+    double thetaTarget;
+    protected Image sprite;
 
-    public BulletEntity()
+    public RocketEntity()
     {
-        super("bullet");
+        super("missile_0");
     }
 
-    public BulletEntity(float initS, int dmg, Vector2f v, Vector2f pos, double theta, String origin, float initDistance)
+    public RocketEntity(float initS, int dmg, Vector2f v, Vector2f pos, double theta, String origin, float initDistance, float acc, Image img, BlockEntity t)
     {
-        super("bullet");
+        super("missile_0");
+        this.theta = theta;
         velocity = new Vector2f();
         damage = dmg;
         velocity.set(v);
@@ -44,6 +51,10 @@ public class BulletEntity extends Entity
         newPos.setTheta(theta);
         setPosition(pos.add(newPos)); //boost in position so bullet travels past player block
         originBlock = origin; //the name of the block the bullet spawned from
+        acceleration = new Vector2f(acc, 0);
+        sprite = img;
+        target = t;
+
     }
 
     public void addToManager()
@@ -51,11 +62,33 @@ public class BulletEntity extends Entity
         MyEntityManager.getInstance().addBulletEntity(this);
     }
 
+    public void turnMissile()
+    {
+        if (target != null)
+        {
+            thetaTarget = (target.getCenterPosition().sub(this.getPosition())).getTheta();
+        }
+        //For calculation
+        theta%=360;
+        theta+=180;
+        thetaTarget+=180;
+        //if theta is bigger...
+        if ((int) (theta - thetaTarget) > 0 && target != null)
+        {
+            theta -= 3;
+        } else if ((int) (theta - thetaTarget) < 0 && target != null)
+        {
+            theta += 3;
+        }
+        theta-=180;
+
+    }
+
     @Override
     public void update(GameContainer container, int delta) throws SlickException
     {
         ArrayList<BlockEntity> temp = MyEntityManager.getInstance().getBlockEntities();
-        ArrayList<BulletEntity> temp2 = MyEntityManager.getInstance().getBulletEntities();
+        ArrayList<RocketEntity> temp2 = MyEntityManager.getInstance().getBulletEntities();
 
         /*
         int index = 0;
@@ -79,8 +112,12 @@ public class BulletEntity extends Entity
 //        {
 //            deadBullet = true;
 //        }
+        turnMissile();
+        acceleration.setTheta(theta);
+        acceleration.scale(0.9999999f);
 
         position.add(velocity);
+        velocity.add(acceleration);
 
         for (int i = 0; i < temp.size(); i++)
         {
@@ -101,6 +138,10 @@ public class BulletEntity extends Entity
                 }
             }
         }
+        if(target!=null&&target.getHP()<=0)
+        {
+            target =null;
+        }
     }
 
     @Override
@@ -112,8 +153,14 @@ public class BulletEntity extends Entity
     @Override
     public void render(GameContainer container, Graphics g) throws SlickException
     {
+        sprite.setRotation((float) theta);
+        g.drawImage(sprite, position.x, position.y);
+
+        //old basic bullet render
+        /*
         g.setColor(Color.yellow);
-        g.drawOval(getPosition().x, getPosition().y, 2, 2);
+        g.drawRect(getPosition().x, getPosition().y, 2, 2);
         g.setColor(Color.white);
+         */
     }
 }
