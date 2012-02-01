@@ -2,6 +2,10 @@ package net.mrfornal.mp;
 
 import net.mrfornal.entity.*;
 import java.util.ArrayList;
+import java.util.TreeMap;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
 
 /**
  * This singleton class manages all the entities in the game.
@@ -14,17 +18,20 @@ public class MyEntityManager
 {
     //A collection of some sort - uses ArrayList here
 
-    private ArrayList<Entity> entities;
-    private ArrayList<BlockEntity> blockEntities;
-    private ArrayList<BulletEntity> bulletEntities;
+    private ArrayList<Entity> entities; //contains miscellaneous entities
+    private ArrayList<BlockEntity> blockEntities; //contains anything with a shape that isn't bullet
+    private ArrayList<RocketEntity> rocketEntities; //contains bullets that do damage and disappear on contact
+    private TreeMap<String, RocketEntity> bulletDefaults; //contains stock bullet definitions to be copied into existence
     //singleton instance
     private static MyEntityManager instance;
 
+    private BlockEntity player; //the player's accessible state
+    
     private MyEntityManager()
     {
         entities = new ArrayList<Entity>();
         blockEntities = new ArrayList<BlockEntity>();
-        bulletEntities = new ArrayList<BulletEntity>();
+        rocketEntities = new ArrayList<RocketEntity>();
     }
 
     public ArrayList<Entity> getAllEntities()
@@ -32,7 +39,7 @@ public class MyEntityManager
         ArrayList<Entity> entityList = new ArrayList<Entity>();
         entityList.addAll(entities);
         entityList.addAll(blockEntities);
-        entityList.addAll(bulletEntities);
+        entityList.addAll(rocketEntities);
         return entityList;
     }
 
@@ -83,9 +90,9 @@ public class MyEntityManager
         blockEntities.add(e);
     }
 
-    public BulletEntity getBulletEntity(String name)
+    public RocketEntity getBulletEntity(String name)
     {
-        for (BulletEntity e : bulletEntities)
+        for (RocketEntity e : rocketEntities)
         {
             if ((e.getName().equals(name)))
             {
@@ -106,19 +113,39 @@ public class MyEntityManager
         this.blockEntities = blockEntities;
     }
 
-    public ArrayList<BulletEntity> getBulletEntities()
+    public ArrayList<RocketEntity> getBulletEntities()
     {
-        return bulletEntities;
+        for (int i = 0; i < rocketEntities.size(); i++)
+        {
+            RocketEntity e = rocketEntities.get(i);
+            if (e.deadBullet)
+            {
+                rocketEntities.remove(i);
+            }
+        }
+        return rocketEntities;
     }
 
-    public void setBulletEntities(ArrayList<BulletEntity> bulletEntities)
+    public void setPlayer(BlockEntity player)
     {
-        this.bulletEntities = bulletEntities;
+        this.player = player;
     }
 
-    public void addBulletEntity(BulletEntity e)
+    public BlockEntity getPlayer()
     {
-        bulletEntities.add(e);
+        return player;
+    }
+    
+    
+
+    public void setBulletEntities(ArrayList<RocketEntity> bulletEntities)
+    {
+        this.rocketEntities = bulletEntities;
+    }
+
+    public void addBulletEntity(RocketEntity e)
+    {
+        rocketEntities.add(e);
     }
 
     public static MyEntityManager getInstance()
@@ -128,5 +155,62 @@ public class MyEntityManager
             instance = new MyEntityManager();
         }
         return instance;
+    }
+    //rather than bouncing the block off of the edge, make it gradually come back in
+    //sort of an elastic slingshot effect
+    Vector2f boundaryAccelerationX = new Vector2f(.2f, .0f);
+    Vector2f boundaryAccelerationY = new Vector2f(.0f, .2f);
+
+    public void checkBoundaries(GameContainer container)
+    {
+        for (BlockEntity entity : getBlockEntities())
+        {
+            Vector2f velocity = entity.getVelocity();
+            Shape block = entity.getBlock();
+            if (container.getWidth() + AsteroidsGame.BOUNDARY < block.getMaxX())
+            {
+                velocity.add(boundaryAccelerationX.negate());
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+            if (container.getHeight() + AsteroidsGame.BOUNDARY < block.getMaxY())
+            {
+                velocity.add(boundaryAccelerationY.negate());
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+            if (-AsteroidsGame.BOUNDARY > block.getMinX())
+            {
+                velocity.add(boundaryAccelerationX);
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+            if (-AsteroidsGame.BOUNDARY > block.getMinY())
+            {
+                velocity.add(boundaryAccelerationY);
+                if (velocity.length() > 2.5f)
+                {
+                    velocity.scale(0.99f);
+                }
+            }
+        }
+        for (RocketEntity entity : getBulletEntities())
+        {
+            Vector2f position = entity.getPosition();
+            if (container.getWidth() + AsteroidsGame.BOUNDARY < position.x || container.getHeight() + AsteroidsGame.BOUNDARY < position.y)
+            {
+                entity.deadBullet = true;
+            }
+            if (-AsteroidsGame.BOUNDARY > position.x || -AsteroidsGame.BOUNDARY > position.y)
+            {
+                entity.deadBullet = true;
+            }
+        }
     }
 }
