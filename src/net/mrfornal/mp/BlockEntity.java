@@ -6,7 +6,6 @@ package net.mrfornal.mp;
 
 import java.util.ArrayList;
 import net.mrfornal.entity.Entity;
-import net.mrfornal.entity.EntityManager;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -67,7 +66,7 @@ public class BlockEntity extends Entity
         hp = maxHP;
         sprite = spr;
     }
-    
+
     public Vector2f getCenterPosition()
     {
         return new Vector2f(block.getCenterX(), block.getCenterY());
@@ -158,7 +157,7 @@ public class BlockEntity extends Entity
     public void update(GameContainer container, int delta) throws SlickException
     {
         //code to remove if HP is equal to or under 0 is in BulletEntity
-        
+
 //        ArrayList<Entity> list = MyEntityManager.getInstance().getEntitiesOfType(getClass());
         ArrayList<BlockEntity> list = MyEntityManager.getInstance().getBlockEntities();
 
@@ -172,54 +171,51 @@ public class BlockEntity extends Entity
         //moved to MyEntityManager
 //        edgeCollide(container);
 
+//gravity
         for (BlockEntity e : list)
         {
-            if (!e.equals(this) && e.getMass() > 50)
+//            if (!e.equals(this) && e.getMass() > 50)
+//            {
+//
+//                float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX(); //turns out getCenter gives you the absolute position
+//                float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
+//                float x2 = /*e.getPosition().x + */ e.getBlock().getCenterX();
+//                float y2 = /*e.getPosition().y + */ e.getBlock().getCenterY();
+//                float m2 = e.getMass();
+//
+//                float acc = (float) (ugc * m2 / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+//
+//                double theta = Math.atan(Math.abs((y2 - y1) / (x2 - x1)));
+//
+//                float accX = Math.abs(acc * (float) Math.cos(theta));
+//                float accY = Math.abs(acc * (float) Math.sin(theta));
+//
+//                //if the other object is to the left of this object, move negative x
+//                if (x2 < x1)
+//                {
+//                    accX *= -1;
+//                }
+//                //if the other object is above this object, move negative y?
+//                if (y2 < y1)
+//                {
+//                    accY *= -1;
+//                }
+//
+//                acceleration.set(new Vector2f(accX, accY));
+//                velocity.add(acceleration);
+//                //accelerate based on position of other blocks
+//
+//                //Collision with another block
+//
+//            }
+            if (!e.equals(this))
             {
-
-                float x1 = /*this.getPosition().x + */ this.getBlock().getCenterX(); //turns out getCenter gives you the absolute position
-                float y1 = /*this.getPosition().y + */ this.getBlock().getCenterY();
-                float x2 = /*e.getPosition().x + */ e.getBlock().getCenterX();
-                float y2 = /*e.getPosition().y + */ e.getBlock().getCenterY();
-                float m2 = e.getMass();
-
-                //old acceleration - x and y - messed up when both objects were near each other. Needed more refinement.
-
-//                float accX =  ugc * m2 / (x2 - x1);
-//                float accY =  ugc * m2 / (y2 - y1);
-
-                float acc = (float) (ugc * m2 / (Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
-
-                double theta = Math.atan(Math.abs((y2 - y1) / (x2 - x1)));
-
-                float accX = Math.abs(acc * (float) Math.cos(theta));
-                float accY = Math.abs(acc * (float) Math.sin(theta));
-
-                //if the other object is to the left of this object, move negative x
-                if (x2 < x1)
-                {
-                    accX *= -1;
-                }
-                //if the other object is above this object, move negative y?
-                if (y2 < y1)
-                {
-                    accY *= -1;
-                }
-
-                acceleration.set(new Vector2f(accX, accY));
-                //System.out.println(acceleration.x + " " + acceleration.y);
-                velocity.add(acceleration);
-                //accelerate based on position of other blocks
-
-                //Collision with another block
                 collide(e);
-
             }
         }
         setPosition(getPosition().add(velocity));
 
-        block.setX(getPosition().x);
-        block.setY(getPosition().y);
+        block.setLocation(getPosition());
     }
 
     public void collide(BlockEntity other)
@@ -309,7 +305,10 @@ public class BlockEntity extends Entity
         {
             g.drawImage(sprite, position.x, position.y);
         }
-        g.drawString("" + hp, getPosition().x, getPosition().y);
+        if (AsteroidsGame.debugRender)
+        {
+            g.drawString("" + hp, getPosition().x, getPosition().y);
+        }
     }
 
     @Override

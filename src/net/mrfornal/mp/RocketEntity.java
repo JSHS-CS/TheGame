@@ -49,7 +49,7 @@ public class RocketEntity extends Entity
 
         Vector2f newPos = new Vector2f(initDistance, 0); //pixel radius of bullet firing
         newPos.setTheta(theta);
-        setPosition(pos.add(newPos)); //boost in position so bullet travels past player block
+        setPosition(pos.add(newPos.scale(1.1f))); //boost in position so bullet travels past player block
         originBlock = origin; //the name of the block the bullet spawned from
         acceleration = new Vector2f(acc, 0);
         sprite = img;
@@ -69,9 +69,9 @@ public class RocketEntity extends Entity
             thetaTarget = (target.getCenterPosition().sub(this.getPosition())).getTheta();
         }
         //For calculation
-        theta%=360;
-        theta+=180;
-        thetaTarget+=180;
+        theta %= 360;
+        theta += 180;
+        thetaTarget += 180;
         //if theta is bigger...
         if ((int) (theta - thetaTarget) > 0 && target != null)
         {
@@ -80,7 +80,7 @@ public class RocketEntity extends Entity
         {
             theta += 3;
         }
-        theta-=180;
+        theta -= 180;
 
     }
 
@@ -123,6 +123,8 @@ public class RocketEntity extends Entity
         {
             BlockEntity e = ((BlockEntity) temp.get(i));
             //will not hit original block that fired the bullet
+
+
             if (!e.getName().equals(originBlock) && e.getBlock().contains(this.getPosition().x, this.getPosition().y))
             {
                 //damage here!
@@ -138,9 +140,9 @@ public class RocketEntity extends Entity
                 }
             }
         }
-        if(target!=null&&target.getHP()<=0)
+        if (target != null && target.getHP() <= 0)
         {
-            target =null;
+            target = null;
         }
     }
 

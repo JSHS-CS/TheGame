@@ -32,7 +32,7 @@ public class TargetButton extends MouseOverArea
     @Override
     public void mouseReleased(int button, int mx, int my)
     {
-        if (isMouseOver()&&button == 0)
+        if (isMouseOver()&&button == 0&&this.currentTarget!=null)
         {
             TargetingGUI.currentTarget = this.currentTarget.getTarget();
         }
@@ -54,7 +54,7 @@ public class TargetButton extends MouseOverArea
     
     public void render(GameContainer container, Graphics g, float posX, float posY)
     {
-        if (isMouseOver())
+        if ((currentTarget!=null&&TargetingGUI.currentTarget!=null&&currentTarget.equals(TargetingGUI.currentTarget))||isMouseOver())
         {
             g.setColor(Color.yellow);
         }
