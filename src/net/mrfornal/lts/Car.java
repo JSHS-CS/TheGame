@@ -21,6 +21,7 @@ public class Car extends Entity
     private Vector2f acceleration;
     private boolean debugging;
     private float MAX_SPEED = 0.7f;
+    float friction = 0.999f;
     
     public Car(Vector2f position, float rotation, int layer) throws SlickException
     {
@@ -44,6 +45,11 @@ public class Car extends Entity
     {
         this.acceleration = acceleration;
     }
+    
+    public void setFriction(float f)
+    {
+        friction = f;
+    }
         
     public Vector2f getVelocity()
     {
@@ -53,6 +59,11 @@ public class Car extends Entity
     public Vector2f getAcceleration()
     {
         return acceleration;
+    }
+    
+    public float getFriction()
+    {
+        return friction;
     }
     
     @Override
@@ -75,21 +86,18 @@ public class Car extends Entity
             if (i.isKeyDown(Input.KEY_LEFT))
             {
                 rotation -= 0.1f * delta;
-                velocity.scale(0.997f);
-                velocity.scale(0.999f);
+                velocity.scale((0.997f + friction)/2);
                 car = new Image("resource/image/ctsv.png");
             }
             if (i.isKeyDown(Input.KEY_RIGHT))
             { 
                 rotation += 0.1f * delta;
-                velocity.scale(0.997f);
-                velocity.scale(0.999f);
+                velocity.scale((0.997f + friction)/2);
                 car = new Image("resource/image/ctsv.png");
             }
             if(i.isKeyDown(Input.KEY_DOWN))
             {
-                velocity.scale(0.995f);
-                velocity.scale(0.999f);
+                velocity.scale((0.995f + friction)/2);
                 car = new Image("resource/image/ctsv.png");
             }
             
@@ -97,7 +105,7 @@ public class Car extends Entity
             if (i.isKeyDown(Input.KEY_UP))
             {
                 velocity.add(acceleration);
-                velocity.scale(0.999f);
+                velocity.scale(friction);
                 car = new Image("resource/image/ctsv-flame.png");
             }
             
@@ -105,7 +113,7 @@ public class Car extends Entity
             if(!i.isKeyDown(Input.KEY_LEFT) && !i.isKeyDown(Input.KEY_RIGHT) 
                     && !i.isKeyDown(Input.KEY_UP) && !i.isKeyDown(Input.KEY_DOWN))
             {
-                velocity.scale(0.999f);
+                velocity.scale(friction);
                 car = new Image("resource/image/ctsv.png");
             }   
         }       
@@ -115,7 +123,9 @@ public class Car extends Entity
         }
         
         position.add(velocity);
-
+        
+        
+        //code to wrap around screen
         if (position.x > container.getWidth())
         {
             position.x = Math.abs(container.getWidth() - position.x);
