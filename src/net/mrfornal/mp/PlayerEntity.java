@@ -187,8 +187,8 @@ public class PlayerEntity extends BlockEntity
             g.drawImage(accelerationSprite, position.x, position.y);
             if (system.getEmitterCount() == 0)
             {
-                system.addEmitter(new EngineEmitter((int) (engineParticle1.x), (int) (engineParticle1.y), .1f));
-                system.addEmitter(new EngineEmitter((int) (engineParticle2).x, (int) (engineParticle2.y), .1f));
+                //system.addEmitter(new EngineEmitter((int) (engineParticle1.x), (int) (engineParticle1.y), .1f));
+                //system.addEmitter(new EngineEmitter((int) (engineParticle2).x, (int) (engineParticle2.y), .1f));
 
             } else
             {
