@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal.mp;
+package net.mrfornal.mp.asteroids;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;

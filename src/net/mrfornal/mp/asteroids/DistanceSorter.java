@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal.mp;
+package net.mrfornal.mp.asteroids;
 
 import java.util.Comparator;
 import org.newdawn.slick.geom.Vector2f;

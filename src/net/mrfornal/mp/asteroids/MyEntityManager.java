@@ -1,4 +1,4 @@
-package net.mrfornal.mp;
+package net.mrfornal.mp.asteroids;
 
 import net.mrfornal.entity.*;
 import java.util.ArrayList;
@@ -21,6 +21,8 @@ public class MyEntityManager
     private ArrayList<Entity> entities; //contains miscellaneous entities
     private ArrayList<BlockEntity> blockEntities; //contains anything with a shape that isn't bullet
     private ArrayList<RocketEntity> rocketEntities; //contains bullets that do damage and disappear on contact
+    private ArrayList<Particle> particles; //contains all particles in the game for recycling
+    private ArrayList<ParticleSystem> particleSystems; //contains all systems of particle emitters
     private TreeMap<String, RocketEntity> bulletDefaults; //contains stock bullet definitions to be copied into existence
     //singleton instance
     private static MyEntityManager instance;
@@ -32,6 +34,8 @@ public class MyEntityManager
         entities = new ArrayList<Entity>();
         blockEntities = new ArrayList<BlockEntity>();
         rocketEntities = new ArrayList<RocketEntity>();
+        particles = new ArrayList<Particle>();
+        particleSystems = new ArrayList<ParticleSystem>();
     }
 
     public ArrayList<Entity> getAllEntities()
@@ -101,6 +105,37 @@ public class MyEntityManager
         }
         //no matching name found
         return null;
+    }
+    
+    public void addParticleSystem(ParticleSystem pS)
+    {
+        particleSystems.add(pS);
+    }
+
+    public ArrayList<ParticleSystem> getAllParticleSystems()
+    {
+        return particleSystems;
+    }
+    
+    
+    
+    public void addParticle(Particle p)
+    {
+        particles.add(p);
+    }
+    
+    public ArrayList<Particle> getAllParticles()
+    {
+        return particles;
+    }
+    
+    public Particle getUnusedParticle()
+    {
+        //continuously moves used particles to the end of the particles list
+        //unused particles make up the smaller indexes of the list
+        Particle p = particles.remove(0);
+        particles.add(p);
+        return p;
     }
 
     public ArrayList<BlockEntity> getBlockEntities()

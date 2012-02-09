@@ -2,10 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal.mp;
+package net.mrfornal.mp.asteroids;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
@@ -19,7 +21,7 @@ public class Particle
 
     private float fadeSpeed;
     private Vector2f velocity, position;
-    private Image particle;
+    private Image particleImage;
     private boolean isUsed;
     private float fade; //255
 
@@ -32,8 +34,9 @@ public class Particle
         fadeSpeed = fS;
         velocity = v;
         position = p;
-        particle = img;
+        particleImage = img;
         isUsed = true;
+        fade = 255;
         return this;
     }
 
@@ -47,29 +50,46 @@ public class Particle
         return setVars(fS, vx, vy, new Vector2f(px, py), img);
     }
 
+    public Vector2f getPosition()
+    {
+        return position;
+    }
+
+    public Vector2f getVelocity()
+    {
+        return velocity;
+    }
+
     public boolean isUsed()
     {
         return isUsed;
     }
 
-    public boolean update()
+    public void killParticle()
     {
-        position.add(velocity);
-        fade -= fadeSpeed;
-        if (fade <= fadeSpeed)
-        {
-            isUsed = false;
-        }
-        particle.setAlpha(fade);
-        return isUsed;
+        isUsed = false;
     }
 
-    public void render(Graphics g)
+    public void update()
     {
         if (isUsed)
         {
-            g.drawImage(particle, position.x, position.y);
+            position.add(velocity);
+            fade -= fadeSpeed;
+            if (fade <= fadeSpeed)
+            {
+                killParticle();
+            }
+            particleImage.setAlpha(fade);
         }
+    }
 
+    public void render(GameContainer container, Graphics g)
+    {
+
+        if (isUsed)
+        {
+            g.drawImage(particleImage, position.x, position.y);
+        }
     }
 }

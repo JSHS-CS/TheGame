@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.mrfornal.mp;
+package net.mrfornal.mp.asteroids;
 
 import java.util.ArrayList;
 import org.newdawn.slick.GameContainer;
@@ -47,6 +47,9 @@ public class PlayerEntity extends BlockEntity
         system = new ParticleSystem(image);
         system.setBlendingMode(1);
 //        
+        
+        
+        
     }
 
     @Override
